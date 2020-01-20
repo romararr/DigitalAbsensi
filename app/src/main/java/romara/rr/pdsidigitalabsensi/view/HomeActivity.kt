@@ -14,13 +14,12 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.location.*
 import kotlinx.android.synthetic.main.home_layout.*
 import org.jetbrains.anko.intentFor
-import org.jetbrains.anko.newTask
 import org.jetbrains.anko.sdk27.coroutines.onClick
 import org.jetbrains.anko.toast
 import romara.rr.pdsidigitalabsensi.R
 import romara.rr.pdsidigitalabsensi.ext.*
 import romara.rr.pdsidigitalabsensi.interfaces.home.iHome
-import romara.rr.pdsidigitalabsensi.model.Attend
+import romara.rr.pdsidigitalabsensi.model.Location.MLocation
 import romara.rr.pdsidigitalabsensi.presenter.HomePresenter
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
@@ -131,8 +130,8 @@ class HomeActivity : AppCompatActivity(), iHome {
         locThread.start()
     }
 
-    override fun onDataCompleteFromApi(q: Attend) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun onDataCompleteFromApi(q: MLocation) {
+        Log.d("ABSEN KLIK", q.toString())
     }
 
     override fun onDataErrorFromApi(throwable: Throwable) {
@@ -222,15 +221,19 @@ class HomeActivity : AppCompatActivity(), iHome {
 
             // Absen Masuk
             if (absenPressed == false) {
-                spSetTimeCome()
 
-                absen_button_text.setText("Anda Sudah Absen")
-                absen_button.setBackgroundResource(R.drawable.rounded_button_disabled)
+                absen_button_text.text = "Loading"
+                presenter.onAttend(this)
 
-                break_button.setBackgroundResource(R.drawable.rounded_button)
-                break_button_text.setText("BREAK")
-
-                time_in.setText(DateTimeFormatter.ofPattern("HH:mm").format(LocalDateTime.now()))
+//                spSetTimeCome()
+//
+//                absen_button_text.setText("Anda Sudah Absen")
+//                absen_button.setBackgroundResource(R.drawable.rounded_button_disabled)
+//
+//                break_button.setBackgroundResource(R.drawable.rounded_button)
+//                break_button_text.setText("BREAK")
+//
+//                time_in.setText(DateTimeFormatter.ofPattern("HH:mm").format(LocalDateTime.now()))
                 absenPressed = true
             } else {
                 toast("Anda Sudah Absen")
@@ -355,7 +358,7 @@ class HomeActivity : AppCompatActivity(), iHome {
                             getCompleteAdress(this, location.latitude, location.longitude)
                         location_text.setText(recentLocation)
 
-                        Log.d("lokasi", getCompleteAdress(this, location.latitude, location.longitude))
+                        spSetLocation(location.latitude, location.longitude)
                     }
                 }
             } else {
@@ -390,6 +393,8 @@ class HomeActivity : AppCompatActivity(), iHome {
             recentLocation =
                 getCompleteAdress(this@HomeActivity, lastLocation.latitude, lastLocation.longitude)
             location_text.setText(recentLocation)
+
+            spSetLocation(lastLocation.latitude, lastLocation.longitude)
         }
     }
 

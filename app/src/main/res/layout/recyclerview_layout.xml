@@ -53,26 +53,26 @@
     </LinearLayout>
     <!-- Header End-->
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:paddingHorizontal="16dp">
+<!--    <RelativeLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="50dp"-->
+<!--        android:paddingHorizontal="16dp">-->
 
-        <TextView
-            android:id="@+id/date_text"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="Selected Date"
-            android:textSize="18sp"/>
+<!--        <TextView-->
+<!--            android:id="@+id/date_text"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:gravity="center"-->
+<!--            android:text="Selected Date"-->
+<!--            android:textSize="18sp"/>-->
 
-        <Button
-            android:id="@+id/selectdate_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true" />
+<!--        <Button-->
+<!--            android:id="@+id/selectdate_button"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_alignParentEnd="true" />-->
 
-    </RelativeLayout>
+<!--    </RelativeLayout>-->
 
     <!-- List Absensi-->
     <androidx.recyclerview.widget.RecyclerView

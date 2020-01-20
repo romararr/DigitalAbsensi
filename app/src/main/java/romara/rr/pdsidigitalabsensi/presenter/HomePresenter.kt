@@ -1,18 +1,17 @@
 package romara.rr.pdsidigitalabsensi.presenter
 
-import android.Manifest
 import android.content.Context
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
-import com.karumi.dexter.Dexter
-import com.karumi.dexter.PermissionToken
-import com.karumi.dexter.listener.PermissionDeniedResponse
-import com.karumi.dexter.listener.PermissionGrantedResponse
-import com.karumi.dexter.listener.PermissionRequest
-import com.karumi.dexter.listener.single.PermissionListener
-import org.jetbrains.anko.toast
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import romara.rr.pdsidigitalabsensi.api.API
+import romara.rr.pdsidigitalabsensi.ext.spGetLocation
+import romara.rr.pdsidigitalabsensi.ext.spGetUser
 import romara.rr.pdsidigitalabsensi.interfaces.home.iHome
-import romara.rr.pdsidigitalabsensi.view.HomeActivity
+import romara.rr.pdsidigitalabsensi.model.Location.MLocation
 import java.time.LocalDateTime
 import kotlin.math.abs
 
@@ -20,8 +19,25 @@ class HomePresenter(context: Context) {
 
     val iHome = context as iHome
 
-    fun onClickAbsen(context: Context, username: String) {
+    fun onAttend(context: Context) {
+        var requestBody: MutableMap<String, String> = mutableMapOf()
+        requestBody.put("username", context.spGetUser())
+        requestBody.put("condition", "come")
+        requestBody.put("note", "datang")
+        requestBody.put("latitude", context.spGetLocation("latitude"))
+        requestBody.put("longitude", context.spGetLocation("longitude"))
 
+        API.create(context).attend(requestBody)
+            .enqueue(object : Callback<MLocation> {
+                override fun onFailure(call: Call<MLocation>, t: Throwable) {
+                    iHome.onDataErrorFromApi(t)
+                }
+
+                override fun onResponse(call: Call<MLocation>, response: Response<MLocation>) {
+                    iHome.onDataCompleteFromApi(response.body() as MLocation)
+                    Log.d("ATTEND DATA", response.body().toString())
+                }
+            })
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

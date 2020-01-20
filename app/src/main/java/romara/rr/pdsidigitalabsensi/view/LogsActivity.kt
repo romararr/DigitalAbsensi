@@ -1,17 +1,19 @@
 package romara.rr.pdsidigitalabsensi.view
 
 import android.app.DatePickerDialog
+import android.os.Build
 import android.os.Bundle
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.recyclerview_layout.*
+import org.jetbrains.anko.toast
 import romara.rr.pdsidigitalabsensi.Constant
 import romara.rr.pdsidigitalabsensi.R
 import romara.rr.pdsidigitalabsensi.base.logs.RVLogsAdapter
 import romara.rr.pdsidigitalabsensi.interfaces.login.iLogs
 import romara.rr.pdsidigitalabsensi.model.Location.MLocation
 import romara.rr.pdsidigitalabsensi.presenter.LogPresenter
-import java.text.SimpleDateFormat
 import java.util.*
 
 class LogsActivity : AppCompatActivity(), iLogs {
@@ -29,14 +31,14 @@ class LogsActivity : AppCompatActivity(), iLogs {
         // Init
         presenter
         rvAdapter = RVLogsAdapter { position -> null }
-//        presenter.onGetData(this)
-        dummyRV()
+        presenter.onGetData(this)
+//        dummyRV()
 
         // Init Value
-        date_text.text = searchDate
+//        date_text.text = searchDate
 
         // Actions
-        selectdate_button.setOnClickListener { datePick() }
+//        selectdate_button.setOnClickListener { datePick() }
         back_button.setOnClickListener { onBackPressed() }
     }
 
@@ -49,34 +51,18 @@ class LogsActivity : AppCompatActivity(), iLogs {
     }
 
     override fun onDataCompleteFromApi(q: MLocation) {
-        if (!q.data.isNullOrEmpty()) {
+        if (q.status == true) {
             recyclerview.apply {
                 layoutManager = LinearLayoutManager(context)
                 adapter = rvAdapter
                 rvAdapter.setData(q.data) // Dummy Data Log Absen
             }
+        } else {
+            toast(q.message)
         }
     }
 
     override fun onDataErrorFromApi(throwable: Throwable) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    private fun datePick() {
-        val cal = Calendar.getInstance()
-        val dateSetListener = DatePickerDialog.OnDateSetListener { datePicker, day, month, year ->
-            cal.set(Calendar.DAY_OF_MONTH, day)
-            cal.set(Calendar.MONTH, month)
-            cal.set(Calendar.YEAR, year)
-            searchDate = SimpleDateFormat("DDDD, DD MM YYYY").format(cal)
-            date_text.text = searchDate
-        }
-        DatePickerDialog(
-            this,
-            dateSetListener,
-            cal.get(Calendar.DAY_OF_MONTH),
-            cal.get(Calendar.MONTH),
-            cal.get(Calendar.YEAR)
-        ).show()
     }
 }

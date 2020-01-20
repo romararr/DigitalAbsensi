@@ -18,5 +18,5 @@ data class MLocation(
     @SerializedName("page_now")
     val page: Int,
     @SerializedName("data")
-    val data: MutableList<MLogUser>?
+    val data: MutableList<MLogUser>
 )

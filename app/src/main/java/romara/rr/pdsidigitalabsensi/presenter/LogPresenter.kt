@@ -27,14 +27,8 @@ class LogPresenter(context: Context) {
                 }
 
                 override fun onResponse(call: Call<MLocation>, response: Response<MLocation>) {
-                    if (response.body()?.status == true) iLogs.onDataCompleteFromApi(response.body() as MLocation)
-                    else (Toast.makeText(
-                        context,
-                        response.body()?.message,
-                        Toast.LENGTH_SHORT
-                    ).show())
+                    iLogs.onDataCompleteFromApi(response.body() as MLocation)
                     Log.d("LOGS DATA", response.body().toString())
-//                    Log.d("TOKEN", context.spGetToken())
                 }
             })
 

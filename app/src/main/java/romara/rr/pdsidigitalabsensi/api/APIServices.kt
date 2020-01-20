@@ -13,4 +13,7 @@ interface APIServices {
 
     @POST("log/get_logging_personal")
     fun logAbsen(@Body body: MutableMap<String, String>): Call<MLocation>
+
+    @POST("attendance/attend/")
+    fun attend(@Body body: MutableMap<String, String>): Call<MLocation>
 }

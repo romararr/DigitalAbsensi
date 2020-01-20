@@ -17,6 +17,7 @@ class SharedPrefManager private constructor(private val context: Context) {
         private val SP_TIME_OUT = "return_shared_pref"
         private val SP_BREAK = "break_shared_pref"
         private val SP_END_BREAK = "endbreak_shared_pref"
+        private val SP_LOC = "location_shared_pref"
 
         private var mInstance: SharedPrefManager? = null
 
@@ -40,6 +41,12 @@ class SharedPrefManager private constructor(private val context: Context) {
     fun saveToken(token: String) {
         val editor = pref(SP_TOKEN).edit()
         editor.putString("token", token)
+        editor.apply()
+    }
+
+    fun saveLocation(key: String, coor: Double){
+        val editor = pref(SP_LOC).edit()
+        editor.putString(key, coor.toString())
         editor.apply()
     }
 
@@ -105,6 +112,10 @@ class SharedPrefManager private constructor(private val context: Context) {
 
     fun getEndBreak () : String? {
         return pref(SP_END_BREAK).getString("endbreak", "")
+    }
+
+    fun getLocation(key: String) : String? {
+        return pref(SP_LOC).getString(key, "0")
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

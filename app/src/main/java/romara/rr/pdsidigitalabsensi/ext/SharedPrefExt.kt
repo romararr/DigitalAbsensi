@@ -2,7 +2,6 @@ package romara.rr.pdsidigitalabsensi.ext
 
 import android.content.Context
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import romara.rr.pdsidigitalabsensi.local.SharedPrefManager
 import java.time.LocalDateTime
@@ -78,6 +77,16 @@ fun Context.spGetEndBreak(): String {
 @RequiresApi(Build.VERSION_CODES.O)
 fun Context.spSetEndBreak() {
     pref(this).saveEndBreak(LocalDateTime.now().toString())
+}
+
+// Location
+fun Context.spGetLocation(key: String): String {
+    return pref(this).getLocation(key).toString()
+}
+
+fun Context.spSetLocation(lat: Double, long: Double) {
+    pref(this).saveLocation("latitude", lat)
+    pref(this).saveLocation("longitude", long)
 }
 
 // Clear Time

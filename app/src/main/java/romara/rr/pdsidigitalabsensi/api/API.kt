@@ -12,7 +12,7 @@ class API {
 
     companion object {
 
-        val BASE_URL  = "https://apps.pertamina.com/PDSIDAS/api/"
+        val BASE_URL = "https://apps.pertamina.com/PDSIDAS/api/"
         val LOCAL = "http://10.13.1.55/PDSIDAS/apidev/"
 
         fun create(context: Context): APIServices {
