@@ -5,7 +5,7 @@ import romara.rr.pdsidigitalabsensi.model.Location.MLocation
 
 interface iHome {
 
-    fun onDataCompleteFromApi(q: MLocation)
+    fun onDataCompleteFromApi(q: MLocation, type: String, resCondition: String)
     fun onDataErrorFromApi(throwable: Throwable)
 
 }

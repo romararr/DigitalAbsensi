@@ -7,6 +7,8 @@ data class MLocation(
     val status: Boolean,
     @SerializedName("message")
     val message: String,
+    @SerializedName("kondisi")
+    val condition: String,
     @SerializedName("total_row")
     val row: Int,
     @SerializedName("limit")

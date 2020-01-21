@@ -16,4 +16,8 @@ interface APIServices {
 
     @POST("attendance/attend/")
     fun attend(@Body body: MutableMap<String, String>): Call<MLocation>
+
+    @POST("attendance/outoffice_attend/")
+    fun attendOutOffice(@Body body: MutableMap<String, String>): Call<MLocation>
+
 }

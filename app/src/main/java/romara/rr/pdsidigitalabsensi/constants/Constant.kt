@@ -1,4 +1,4 @@
-package romara.rr.pdsidigitalabsensi
+package romara.rr.pdsidigitalabsensi.constants
 
 import romara.rr.pdsidigitalabsensi.model.Location.MLogUser
 

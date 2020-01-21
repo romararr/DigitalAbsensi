@@ -1,20 +1,20 @@
 package romara.rr.pdsidigitalabsensi.view
 
-import android.app.DatePickerDialog
-import android.os.Build
+import android.app.AlertDialog
 import android.os.Bundle
-import androidx.annotation.RequiresApi
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.recyclerview_layout.*
 import org.jetbrains.anko.toast
-import romara.rr.pdsidigitalabsensi.Constant
+import romara.rr.pdsidigitalabsensi.constants.Constant
 import romara.rr.pdsidigitalabsensi.R
 import romara.rr.pdsidigitalabsensi.base.logs.RVLogsAdapter
 import romara.rr.pdsidigitalabsensi.interfaces.login.iLogs
 import romara.rr.pdsidigitalabsensi.model.Location.MLocation
 import romara.rr.pdsidigitalabsensi.presenter.LogPresenter
-import java.util.*
 
 class LogsActivity : AppCompatActivity(), iLogs {
 
@@ -63,6 +63,17 @@ class LogsActivity : AppCompatActivity(), iLogs {
     }
 
     override fun onDataErrorFromApi(throwable: Throwable) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        showErrorDialog()
+    }
+
+    fun showErrorDialog() {
+        val viewGroup = findViewById<ViewGroup>(android.R.id.content)
+        val dialogView: View =
+            LayoutInflater.from(this).inflate(R.layout.net_error_layout, viewGroup, false)
+        val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+        builder.setView(dialogView)
+
+        val alertDialog: AlertDialog = builder.create()
+        alertDialog.show()
     }
 }

@@ -1,6 +1,7 @@
 package romara.rr.pdsidigitalabsensi.view
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
@@ -9,21 +10,26 @@ import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.location.*
-import kotlinx.android.synthetic.main.home_layout.*
-import org.jetbrains.anko.intentFor
+import kotlinx.android.synthetic.main.new_home_layout.*
+import kotlinx.android.synthetic.main.out_office_note.*
+import kotlinx.android.synthetic.main.out_office_note.view.*
 import org.jetbrains.anko.sdk27.coroutines.onClick
+import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 import romara.rr.pdsidigitalabsensi.R
+import romara.rr.pdsidigitalabsensi.constants.ConstVar
 import romara.rr.pdsidigitalabsensi.ext.*
 import romara.rr.pdsidigitalabsensi.interfaces.home.iHome
 import romara.rr.pdsidigitalabsensi.model.Location.MLocation
 import romara.rr.pdsidigitalabsensi.presenter.HomePresenter
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
+
 
 class HomeActivity : AppCompatActivity(), iHome {
 
@@ -55,7 +61,7 @@ class HomeActivity : AppCompatActivity(), iHome {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.home_layout)
+        setContentView(R.layout.new_home_layout)
 
         instance = this
 
@@ -71,11 +77,18 @@ class HomeActivity : AppCompatActivity(), iHome {
         getFirstView(today, if (out.isNotEmpty()) out else come)
         liveTime()
 
-        absen_button.onClick { onAbsenClick() }
-        break_button.onClick { onBreakClick() }
-        r_absen_button.onClick { startActivity(intentFor<AbsensiActivity>()) }
-        r_map_button.onClick { startActivity(intentFor<LogsActivity>()) }
-        logout_button.onClick { onLogout() }
+//        absen_button.onClick { onAbsenClick() }
+//        break_button.onClick { onBreakClick() }
+//        r_absen_button.onClick { startActivity(intentFor<AbsensiActivity>()) }
+//        r_map_button.onClick { startActivity(intentFor<LogsActivity>()) }
+//        logout_button.onClick { onLogout() }
+
+        masuk_button.onClick { absenCome() }
+        pulang_button.onClick { absenReturn() }
+        istirahat_button.onClick { absenBreak() }
+        end_istirahat_button.onClick { absenEndBreak() }
+        historyabsen_button.onClick { startActivity<AbsensiActivity>() }
+        historymap_button.onClick { startActivity<LogsActivity>() }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -83,7 +96,7 @@ class HomeActivity : AppCompatActivity(), iHome {
         spClearTime()
         spClear()
 
-        startActivity(intentFor<LoginActivity>())
+        startActivity<LoginActivity>()
         finish()
     }
 
@@ -100,7 +113,7 @@ class HomeActivity : AppCompatActivity(), iHome {
                             val sdf =
                                 SimpleDateFormat("HH:mm")
                             val dateStr = sdf.format(date)
-                            time_text.setText(dateStr)
+                            time_view.setText(dateStr)
                         }
                     }
                 } catch (e: InterruptedException) {
@@ -130,129 +143,184 @@ class HomeActivity : AppCompatActivity(), iHome {
         locThread.start()
     }
 
-    override fun onDataCompleteFromApi(q: MLocation) {
-        Log.d("ABSEN KLIK", q.toString())
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onDataCompleteFromApi(q: MLocation, type: String, resCondition: String) {
+
+        absenPressed = false
+        breakPressed = false
+        item_menu.visible()
+        loading_view.gone()
+
+        if (q.status == false) {
+            when (q.condition) {
+                ConstVar.SUDAHABSEN -> toast("Anda Sudah Absen")
+                ConstVar.ATTENDYET -> toast("Anda Belum Absen Masuk")
+                else -> toast(q.message)
+            }
+            return
+        }
+
+        // Absen Masuk
+//        when (type) {
+//            ConstVar.COME -> absenCome()
+//            ConstVar.RETURN -> absenReturn()
+//            ConstVar.BREAK -> absenBreak()
+//            ConstVar.ENDBREAK -> absenEndBreak()
+//        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun absenCome() {
+        item_menu.gone()
+        loading_view.visible()
+        presenter.onAttend(applicationContext, ConstVar.COME, "datang")
+//        absen_button_text.setText("Anda Sudah Absen")
+//        absen_button.setBackgroundResource(R.drawable.rounded_button_disabled)
+//
+//        break_button.setBackgroundResource(R.drawable.rounded_button)
+//        break_button_text.setText("BREAK")
+//
+//        spSetTimeCome()
+//        time_in.setText(DateTimeFormatter.ofPattern("HH:mm").format(LocalDateTime.now()))
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun absenReturn() {
+        item_menu.gone()
+        loading_view.visible()
+        presenter.onAttend(applicationContext, ConstVar.RETURN, "pulang")
+//        absen_button_text.setText("Terima Kasih")
+//        absen_button.setBackgroundResource(R.drawable.rounded_button_disabled)
+//
+//        spSetTimeOut()
+//        time_out.setText(
+//            DateTimeFormatter.ofPattern("HH:mm").format(LocalDateTime.now())
+//        )
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun absenBreak() {
+        item_menu.gone()
+        loading_view.visible()
+        presenter.onAttend(applicationContext, ConstVar.BREAK, "istirahat")
+//        spSetBreak()
+//        break_button.setBackgroundResource(R.drawable.rounded_button_disabled)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun absenEndBreak() {
+        item_menu.gone()
+        loading_view.visible()
+        presenter.onAttend(applicationContext, ConstVar.ENDBREAK, "selesai istirahat")
+//        spSetEndBreak()
+//        break_button.setBackgroundResource(R.drawable.rounded_button_disabled)
     }
 
     override fun onDataErrorFromApi(throwable: Throwable) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        absenPressed = false
+        breakPressed = false
+        item_menu.visible()
+        loading_view.gone()
+        showErrorDialog()
+        Log.d("ERR API", throwable.toString())
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun getFirstView(today: Boolean?, time: String) {
-        when (today) {
-            true -> {
-                Log.d("TODAY", "yess")
-
-                // Set If Today
-                if (out.isEmpty()) {
-
-                    Log.d("BEFORE MASUK", "okee")
-                    // Before Come
-                    if (time.isEmpty()) {
-
-                        absen_button_text.setText("M A S U K")
-                        absen_button.setBackgroundResource(R.drawable.rounded_button)
-
-                        break_button.setBackgroundResource(R.drawable.rounded_button_disabled)
-                        break_button_text.setText("BREAK")
-
-                    }
-                    // After Come
-                    else {
-
-                        time_in.setText(
-                            DateTimeFormatter.ofPattern("HH:mm").format(
-                                LocalDateTime.parse(come)
-                            )
-                        )
-
-                        Log.d("AFTER MASUK", "okee")
-                        if (presenter.getDifferentTime(time) > diffDefault) {
-
-                            absen_button_text.setText("P U L A N G")
-                            absen_button.setBackgroundResource(R.drawable.rounded_button_return)
-
-                        } else {
-
-                            absen_button_text.setText("Anda Sudah Absen Pagi")
-                            absen_button.setBackgroundResource(R.drawable.rounded_button_disabled)
-
-                        }
-
-                        getBreakStatus()
-                    }
-                } else {
-
-                    getBreakStatus()
-
-                    if (time.isNotEmpty()) {
-                        absen_button_text.setText("Anda Sudah Absen Pulang")
-                        absen_button.setBackgroundResource(R.drawable.rounded_button_disabled)
-                    }
-
-                    time_out.setText(
-                        DateTimeFormatter.ofPattern("HH:mm").format(
-                            LocalDateTime.parse(out)
-                        )
-                    )
-
-                }
-            }
-            false -> {
-
-                Log.d("TODAY", "noo")
-                spClearTime()
-                getFirstView(true, "")
-            }
-
+        if (today == true) {
+            if (come.isNotEmpty()) time_masuk.text = presenter.parseTime(come)
+            if (out.isNotEmpty()) time_pulang.text = presenter.parseTime(out)
+            if (breakTime.isNotEmpty()) time_break.text = presenter.parseTime(breakTime)
+            if (endbreakTime.isNotEmpty()) time_endbreak.text = presenter.parseTime(endbreakTime)
+        } else {
+            spClearTime()
+            getFirstView(true, "")
         }
+//        when (today) {
+//            true -> {
+//                Log.d("TODAY", "yess")
+//
+//                // Set If Today
+//                if (out.isEmpty()) {
+//
+//                    Log.d("BEFORE MASUK", "okee")
+//                    // Before Come
+//                    if (time.isEmpty()) {
+//
+//                        absen_button_text.setText("M A S U K")
+//                        absen_button.setBackgroundResource(R.drawable.rounded_button)
+//
+//                        break_button.setBackgroundResource(R.drawable.rounded_button_disabled)
+//                        break_button_text.setText("BREAK")
+//
+//                    }
+//                    // After Come
+//                    else {
+//
+//                        time_in.setText(presenter.parseTime(come))
+//
+//                        Log.d("AFTER MASUK", "okee")
+//                        if (presenter.getDifferentTime(time) > diffDefault) {
+//
+//                            absen_button_text.setText("P U L A N G")
+//                            absen_button.setBackgroundResource(R.drawable.rounded_button_return)
+//
+//                        } else {
+//
+//                            absen_button_text.setText("Anda Sudah Absen Pagi")
+//                            absen_button.setBackgroundResource(R.drawable.rounded_button_disabled)
+//
+//                        }
+//
+//                        getBreakStatus()
+//                    }
+//                } else {
+//
+//                    getBreakStatus()
+//
+//                    if (time.isNotEmpty()) {
+//                        absen_button_text.setText("Anda Sudah Absen Pulang")
+//                        absen_button.setBackgroundResource(R.drawable.rounded_button_disabled)
+//                    }
+//
+//                    time_out.setText(presenter.parseTime(out))
+//
+//                }
+//            }
+//            false -> {
+//
+//                Log.d("TODAY", "noo")
+//                spClearTime()
+//                getFirstView(true, "")
+//            }
+//
+//        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun onAbsenClick() {
 
-        Log.d("COME", come)
-        Log.d("COMOUT", out)
+        // Absen Lengkap
+        if ((come.isNotEmpty() && out.isNotEmpty()) || absenPressed == true) {
+            toast("Anda Sudah Absen")
+            return
+        }
+
+        // Set Loading Absen
+//        absen_button_text.text = "Loading..."
 
         if (come.isEmpty()) {
 
-            Log.d("EMPTY", "oke")
-
             // Absen Masuk
-            if (absenPressed == false) {
-
-                absen_button_text.text = "Loading"
-                presenter.onAttend(this)
-
-//                spSetTimeCome()
-//
-//                absen_button_text.setText("Anda Sudah Absen")
-//                absen_button.setBackgroundResource(R.drawable.rounded_button_disabled)
-//
-//                break_button.setBackgroundResource(R.drawable.rounded_button)
-//                break_button_text.setText("BREAK")
-//
-//                time_in.setText(DateTimeFormatter.ofPattern("HH:mm").format(LocalDateTime.now()))
-                absenPressed = true
-            } else {
-                toast("Anda Sudah Absen")
-            }
+            presenter.onAttend(this, ConstVar.COME, "datang")
+            absenPressed = true
 
         } else {
 
-            Log.d("NOTEMPTY", presenter.getDifferentTime(come).toString())
-
             // Absen Pulang
-            if (presenter.getDifferentTime(come) > diffDefault && absenPressed == false) {
-                absen_button_text.setText("Terima Kasih")
-                absen_button.setBackgroundResource(R.drawable.rounded_button_disabled)
+            if (presenter.getDifferentTime(come) > diffDefault) {
 
-                spSetTimeOut()
-                time_out.setText(
-                    DateTimeFormatter.ofPattern("HH:mm").format(LocalDateTime.now())
-                )
-
+                presenter.onAttend(this, ConstVar.RETURN, "pulang")
                 breakPressed = true
 
             } else {
@@ -261,10 +329,6 @@ class HomeActivity : AppCompatActivity(), iHome {
 
         }
 
-        // Absen Lengkap
-        if (come.isNotEmpty() && out.isNotEmpty()) {
-
-        }
     }
 
     // Break Absen
@@ -272,28 +336,28 @@ class HomeActivity : AppCompatActivity(), iHome {
     fun getBreakStatus() {
 
         if (breakTime.isNotEmpty() && endbreakTime.isNotEmpty()) {
-            break_button_text.setText("BREAK")
-            break_button.setBackgroundResource(R.drawable.rounded_button_disabled)
+//            break_button_text.setText("BREAK")
+//            break_button.setBackgroundResource(R.drawable.rounded_button_disabled)
             return
         }
 
         if (breakTime.isNotEmpty()) {
 
             if (presenter.getDifferentTime(breakTime) > 15000) {
-                break_button_text.setText("END BREAK")
-                break_button.setBackgroundResource(R.drawable.rounded_button_return)
+//                break_button_text.setText("END BREAK")
+//                break_button.setBackgroundResource(R.drawable.rounded_button_return)
             } else {
 
                 if (endbreakTime.isNotEmpty()) {
-                    break_button_text.setText("END BREAK")
-                    break_button.setBackgroundResource(R.drawable.rounded_button_disabled)
+//                    break_button_text.setText("END BREAK")
+//                    break_button.setBackgroundResource(R.drawable.rounded_button_disabled)
                 }
 
             }
 
         } else {
-            break_button_text.setText("BREAK")
-            break_button.setBackgroundResource(R.drawable.rounded_button)
+//            break_button_text.setText("BREAK")
+//            break_button.setBackgroundResource(R.drawable.rounded_button)
         }
     }
 
@@ -301,30 +365,30 @@ class HomeActivity : AppCompatActivity(), iHome {
     fun onBreakClick() {
 
         if (come.isEmpty()) return
+        if (breakPressed == true) {
+            toast("Anda Sudah Istirahat")
+            return
+        }
+
+//        break_button_text.text = "Loading..."
 
         if (breakTime.isEmpty()) {
 
-            if (breakPressed == false) {
-                spSetBreak()
-                break_button.setBackgroundResource(R.drawable.rounded_button_disabled)
-
-                breakPressed = true
-            } else {
-                toast("Anda Sudah Istirahat")
-            }
+            // BREAK START
+            presenter.onAttend(this, ConstVar.BREAK, "ISTIRAHAT START")
+            breakPressed = true
 
         } else
 
+        // BREAK END
             if (presenter.getDifferentTime(breakTime) > 15000) {
 
-                if (endbreakTime.isEmpty() && breakPressed == false) {
-                    spSetEndBreak()
-                    break_button.setBackgroundResource(R.drawable.rounded_button_disabled)
+                if (endbreakTime.isEmpty()) {
 
+                    presenter.onAttend(this, ConstVar.ENDBREAK, "ISTIRAHAT END")
                     breakPressed = true
-                } else {
-                    toast("Anda Sudah Istirahat")
                 }
+
             } else {
                 toast("Anda Sudah Istirahat")
             }
@@ -398,4 +462,38 @@ class HomeActivity : AppCompatActivity(), iHome {
         }
     }
 
+    fun showNoteDialog(condition: String) {
+        val viewGroup = findViewById<ViewGroup>(android.R.id.content)
+        val dialogView: View =
+            LayoutInflater.from(this).inflate(R.layout.out_office_note, viewGroup, false)
+        val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+        builder.setView(dialogView)
+
+        val alertDialog: AlertDialog = builder.create()
+
+        dialogView.manualcome_button.setOnClickListener {
+            if (dialogView.note_text.equals("")) {
+                toast("Note harus diisi")
+            } else {
+                presenter.onAttendOutOffice(
+                    this,
+                    condition,
+                    note_text.text.toString()
+                )
+            }
+        }
+
+        alertDialog.show()
+    }
+
+    fun showErrorDialog() {
+        val viewGroup = findViewById<ViewGroup>(android.R.id.content)
+        val dialogView: View =
+            LayoutInflater.from(this).inflate(R.layout.net_error_layout, viewGroup, false)
+        val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+        builder.setView(dialogView)
+
+        val alertDialog: AlertDialog = builder.create()
+        alertDialog.show()
+    }
 }
