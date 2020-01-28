@@ -1,33 +1,35 @@
 package romara.rr.pdsidigitalabsensi.presenter
 
-import android.os.Build
-import androidx.annotation.RequiresApi
+import android.content.Context
+import android.util.Log
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import romara.rr.pdsidigitalabsensi.api.API
+import romara.rr.pdsidigitalabsensi.ext.spGetUser
 import romara.rr.pdsidigitalabsensi.interfaces.absensi.iAbsensi
-import java.time.LocalDateTime
+import romara.rr.pdsidigitalabsensi.model.absen.MAttend
 
-class AbsensiPresenter(absenView: iAbsensi) {
+class AbsensiPresenter(context: Context) {
 
-    val v = absenView
+    val iAbsen = context as iAbsensi
 
-    // Default Value
-    @RequiresApi(Build.VERSION_CODES.O)
-    val date = LocalDateTime.now()
+    fun onGetData(context: Context) {
+        var requestBody: MutableMap<String, String> = mutableMapOf()
+        requestBody.put("username", context.spGetUser())
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    val bulan = date.month
+        API.create(context).getPersonalAbsen(requestBody)
+            .enqueue(object : Callback<MAttend> {
+                override fun onFailure(call: Call<MAttend>, t: Throwable) {
+                    iAbsen.onDataErrorFromApi(t)
+                }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    val day = date.dayOfMonth
+                override fun onResponse(call: Call<MAttend>, response: Response<MAttend>) {
+                    iAbsen.onDataCompleteFromApi(response.body() as MAttend)
+                    Log.d("ATTEND LIST DATA", response.body().toString())
+                }
+            })
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    val from = "" + date.year + "-" + bulan + date.dayOfMonth
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    val to = "" + date.year + "-" + bulan + day
-
-    val page = 1
-    val limit = 5
-
-//    fun getData(context: Context, )
+    }
 
 }

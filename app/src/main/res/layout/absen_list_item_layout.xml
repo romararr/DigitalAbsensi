@@ -40,18 +40,24 @@
                 android:orientation="horizontal">
 
                 <!-- Time Masuk Absensi-->
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:padding="2dp"
+                    android:src="@drawable/login" />
+
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Masuk: " />
+                    android:text=" Masuk " />
 
                 <TextView
                     android:id="@+id/time_masuk"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:text="07:12"
+                    android:text=": --:--"
                     android:textStyle="bold" />
 
             </LinearLayout>
@@ -63,18 +69,25 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:padding="2dp"
+                    android:src="@drawable/logout" />
+
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Pulang: " />
+                    android:text=" Pulang " />
 
                 <TextView
                     android:id="@+id/time_pulang"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:text="--:--"
+                    android:text=": --:--"
                     android:textStyle="bold" />
 
             </LinearLayout>
@@ -87,6 +100,6 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="#efefef" />
+        android:background="@color/gray" />
 
 </LinearLayout>

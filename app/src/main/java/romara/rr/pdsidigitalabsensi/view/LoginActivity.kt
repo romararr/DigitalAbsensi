@@ -1,61 +1,86 @@
 package romara.rr.pdsidigitalabsensi.view
 
-import android.os.Build
 import android.os.Bundle
-import androidx.annotation.RequiresApi
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.login_layout.*
 import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.newTask
+import org.jetbrains.anko.toast
 import romara.rr.pdsidigitalabsensi.R
-import romara.rr.pdsidigitalabsensi.ext.spSetToday
-import romara.rr.pdsidigitalabsensi.ext.spSetToken
-import romara.rr.pdsidigitalabsensi.ext.spSetUserdata
+import romara.rr.pdsidigitalabsensi.base.BaseActivity
+import romara.rr.pdsidigitalabsensi.ext.*
 import romara.rr.pdsidigitalabsensi.interfaces.login.iLogin
 import romara.rr.pdsidigitalabsensi.local.SharedPrefManager
-import romara.rr.pdsidigitalabsensi.model.User.MLogin
+import romara.rr.pdsidigitalabsensi.model.user.MUserLogin
 import romara.rr.pdsidigitalabsensi.presenter.LoginPresenter
 
-class LoginActivity : AppCompatActivity(), iLogin {
+class LoginActivity : BaseActivity(), iLogin {
 
     private val presenter by lazy {
         LoginPresenter(this)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    var username: String = ""
+    var password: String = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login_layout)
 
         // Init
+        initTime()
         presenter
 
         // Event
         login_button.setOnClickListener {
-            presenter.onLogin(this, input_username.text.toString(), input_password.text.toString())
+            onLoginCheck()
 //            dummyLogin()
         }
 
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun dummyLogin(){
+    fun onLoginCheck() {
+        username = input_username.text.toString()
+        password = input_password.text.toString()
+
+        if (username.isEmpty()) {
+            input_username.setError("Username kosong!")
+            return
+        }
+
+        if (password.isEmpty()) {
+            input_password.setError("Password kosong!")
+            return
+        }
+
+        loading.visible()
+        login_button.gone()
+        presenter.onLogin(this, username, password)
+    }
+
+    private fun dummyLogin() {
         spSetToday()
 
         startActivity(intentFor<HomeActivity>().newTask())
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    override fun onDataCompleteFromApi(q: MLogin) {
+    override fun onDataCompleteFromApi(q: MUserLogin) {
+
         spSetToken(q.token)
         spSetUserdata(q.data.username)
+        spSetNip(q.data.nip)
+        spSetRole(q.data.role)
         spSetToday()
 
         startActivity(intentFor<HomeActivity>().newTask())
     }
 
     override fun onDataErrorFromApi(throwable: Throwable) {
-
+        loading.gone()
+        login_button.visible()
+        toast("Network Error")
+        Log.d("ERR API", throwable.toString())
     }
 
     override fun onStart() {

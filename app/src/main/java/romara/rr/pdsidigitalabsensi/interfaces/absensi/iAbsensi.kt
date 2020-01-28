@@ -1,8 +1,8 @@
 package romara.rr.pdsidigitalabsensi.interfaces.absensi
 
-import romara.rr.pdsidigitalabsensi.model.Attend
+import romara.rr.pdsidigitalabsensi.model.absen.MAttend
 
 interface iAbsensi {
-    fun onDataCompleteFromApi(q: Attend)
+    fun onDataCompleteFromApi(q: MAttend)
     fun onDataErrorFromApi(throwable: Throwable)
 }

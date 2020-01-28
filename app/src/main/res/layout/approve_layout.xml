@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/approve_card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="20dp"
+    android:layout_marginTop="20dp"
+    android:background="@drawable/bg_approve_come"
+    android:elevation="3dp"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!-- PROFILE -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2">
+
+            <ImageView
+                android:id="@+id/profile_pic"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/rounded_button_disabled"
+                android:padding="3dp"
+                android:src="@drawable/default_profile"
+                android:layout_marginRight="10dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical"
+                android:layout_marginRight="20dp">
+
+                <TextView
+                    android:id="@+id/approve_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:text="..."
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/approve_nip"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="NIP. ..."
+                    android:textSize="12dp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+        <!-- PROFILE END-->
+
+        <!-- JAM-->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/type_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Masuk"
+                android:textStyle="bold"
+                android:gravity="center"/>
+
+            <TextView
+                android:id="@+id/time_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="00:00"
+                android:textSize="34sp"
+                android:textStyle="bold"/>
+
+        </LinearLayout>
+        <!-- JAM END-->
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- REMARK -->
+        <LinearLayout
+            android:layout_toLeftOf="@+id/action_group"
+            android:id="@+id/remark_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:text="Remarks"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/remark_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="4"
+                android:text="Empty remarks"
+                android:layout_marginRight="10dp"
+                android:textSize="12dp"/>
+
+
+        </LinearLayout>
+        <!-- REMARK END-->
+
+        <!-- ACTION-->
+        <LinearLayout
+            android:id="@+id/action_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:layout_marginTop="10dp"
+            android:layout_alignParentRight="true">
+
+            <LinearLayout
+                android:id="@+id/reject_button"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/rounded_button_return"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="10dp"
+                    android:src="@drawable/x_white" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/approve_button"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:background="@drawable/rounded_button"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="10dp"
+                    android:src="@drawable/check_white" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+        <!-- ACTION END-->
+
+    </RelativeLayout>
+
+</LinearLayout>

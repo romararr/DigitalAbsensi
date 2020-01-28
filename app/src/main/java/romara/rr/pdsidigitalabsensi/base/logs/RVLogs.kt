@@ -9,10 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.logs_list_item_layout.view.*
 import romara.rr.pdsidigitalabsensi.R
 import romara.rr.pdsidigitalabsensi.base.BaseListAdapter
-import romara.rr.pdsidigitalabsensi.model.Location.MLogUser
-import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.OffsetDateTime
+import romara.rr.pdsidigitalabsensi.model.location.MLogUser
 import java.time.format.DateTimeFormatter
 
 class RVLogsAdapter(private val listener: (position: Int) -> Unit) :
@@ -56,11 +53,12 @@ class RVLogsAdapter(private val listener: (position: Int) -> Unit) :
 
 class Holder(v: View, listener: (position: Int) -> Unit) : RecyclerView.ViewHolder(v) {
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun bindLocation(data: MLogUser) {
-        itemView.log_date_absen.text = data.timing
-        itemView.lat_text.text = data.latitude.toString()
-        itemView.long_text.text = data.longitude.toString()
+        val date = data.timing.split(" ")[0].split("-")
+
+        itemView.log_date_absen.text = date[2] + "-" + date[1] + "-" + date[0]
+        itemView.long_text.text = ": " + data.longitude.toString()
+        itemView.lat_text.text = ": " + data.latitude.toString()
     }
 
 }

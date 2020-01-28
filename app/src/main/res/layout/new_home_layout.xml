@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootLayout"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -15,8 +16,8 @@
         <LinearLayout
             android:id="@+id/headerProfile"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:background="@color/colorPrimary"
+            android:layout_height="175dp"
+            android:background="@drawable/bg_main_header"
             android:orientation="vertical"
             android:padding="20dp">
 
@@ -31,32 +32,26 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="2">
 
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1">
-
-                        <ImageView
-                            android:id="@+id/profile_pic"
-                            android:layout_width="70dp"
-                            android:layout_height="70dp"
-                            android:src="@drawable/default_profile"
-                            android:padding="3dp"
-                            android:background="@drawable/rounded_button_disabled"/>
-
-                    </LinearLayout>
+                    <ImageView
+                        android:id="@+id/profile_pic"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginRight="10dp"
+                        android:background="@drawable/rounded_button_disabled"
+                        android:padding="3dp"
+                        android:src="@drawable/default_profile" />
 
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_weight="2"
                         android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/profile_name"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:maxLines="1"
                             android:text="..."
                             android:textColor="@color/white"
                             android:textSize="18sp"
@@ -69,6 +64,18 @@
                             android:text="NIP. ..."
                             android:textColor="@color/white" />
 
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent">
+
+                        <ImageView
+                            android:id="@+id/menu_button"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/arrow_down" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -88,7 +95,7 @@
                         android:layout_height="wrap_content"
                         android:text="--:--"
                         android:textColor="@color/white"
-                        android:textSize="42sp"
+                        android:textSize="40sp"
                         android:textStyle="bold" />
 
                 </LinearLayout>
@@ -97,6 +104,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/location_view"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1">
@@ -106,9 +114,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/recentTime_view"
-                    android:orientation="vertical"
-                    android:paddingTop="10dp"
-                    android:layout_gravity="center">
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -126,8 +133,8 @@
 
                         <com.airbnb.lottie.LottieAnimationView
                             android:id="@+id/icon_lokasi"
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
                             android:layout_gravity="center"
                             app:lottie_autoPlay="true"
                             app:lottie_fileName="mapmaker.json"
@@ -178,8 +185,8 @@
             android:id="@+id/item_menu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:background="@color/white"
+            android:orientation="vertical"
             android:padding="20dp">
 
             <!-- Absen Masuk Pulang-->
@@ -192,37 +199,37 @@
                     android:id="@+id/masuk_button"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_marginRight="20dp"
                     android:layout_weight="1"
-                    android:orientation="vertical"
                     android:background="@drawable/bg_rounded_white"
                     android:elevation="2dp"
-                    android:padding="10dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_margin="10dp">
+                    android:orientation="vertical"
+                    android:padding="10dp">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Masuk"
                         android:gravity="center"
-                        android:textStyle="bold"
-                        android:textSize="20sp"/>
+                        android:text="Masuk"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
 
                     <ImageView
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:src="@drawable/login"
                         android:layout_gravity="center"
-                        android:layout_margin="10dp"/>
+                        android:layout_margin="10dp"
+                        android:src="@drawable/login" />
 
                     <TextView
                         android:id="@+id/time_masuk"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="--:--"
                         android:gravity="center"
-                        android:textStyle="bold"
-                        android:textSize="20sp"/>
+                        android:text="--:--"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
@@ -230,36 +237,36 @@
                     android:id="@+id/pulang_button"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
                     android:layout_weight="1"
-                    android:orientation="vertical"
                     android:background="@drawable/bg_rounded_white"
                     android:elevation="2dp"
-                    android:padding="10dp"
-                    android:layout_margin="10dp">
+                    android:orientation="vertical"
+                    android:padding="10dp">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Pulang"
                         android:gravity="center"
-                        android:textStyle="bold"
-                        android:textSize="20sp"/>
+                        android:text="Pulang"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
 
                     <ImageView
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:src="@drawable/logout"
                         android:layout_gravity="center"
-                        android:layout_margin="10dp"/>
+                        android:layout_margin="10dp"
+                        android:src="@drawable/logout" />
 
                     <TextView
                         android:id="@+id/time_pulang"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="--:--"
                         android:gravity="center"
-                        android:textStyle="bold"
-                        android:textSize="20sp"/>
+                        android:text="--:--"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
@@ -276,37 +283,37 @@
                     android:id="@+id/istirahat_button"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_marginRight="20dp"
                     android:layout_weight="1"
-                    android:orientation="vertical"
                     android:background="@drawable/bg_rounded_white"
                     android:elevation="2dp"
-                    android:padding="10dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_margin="10dp">
+                    android:orientation="vertical"
+                    android:padding="10dp">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Break"
                         android:gravity="center"
-                        android:textStyle="bold"
-                        android:textSize="20sp"/>
+                        android:text="Break"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
 
                     <ImageView
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:src="@drawable/breaks"
                         android:layout_gravity="center"
-                        android:layout_margin="10dp"/>
+                        android:layout_margin="10dp"
+                        android:src="@drawable/breaks" />
 
                     <TextView
                         android:id="@+id/time_break"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="--:--"
                         android:gravity="center"
-                        android:textStyle="bold"
-                        android:textSize="20sp"/>
+                        android:text="--:--"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
@@ -314,36 +321,36 @@
                     android:id="@+id/end_istirahat_button"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
                     android:layout_weight="1"
-                    android:orientation="vertical"
                     android:background="@drawable/bg_rounded_white"
                     android:elevation="2dp"
-                    android:padding="10dp"
-                    android:layout_margin="10dp">
+                    android:orientation="vertical"
+                    android:padding="10dp">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="End Break"
                         android:gravity="center"
-                        android:textStyle="bold"
-                        android:textSize="20sp"/>
+                        android:text="End Break"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
 
                     <ImageView
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:src="@drawable/breakend"
                         android:layout_gravity="center"
-                        android:layout_margin="10dp"/>
+                        android:layout_margin="10dp"
+                        android:src="@drawable/breakend" />
 
                     <TextView
                         android:id="@+id/time_endbreak"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="--:--"
                         android:gravity="center"
-                        android:textStyle="bold"
-                        android:textSize="20sp"/>
+                        android:text="--:--"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
@@ -352,66 +359,106 @@
 
             <!-- History-->
             <LinearLayout
+                android:id="@+id/verify_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.5" />
+
                 <LinearLayout
-                    android:id="@+id/historymap_button"
+                    android:id="@+id/verify_button"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
                     android:layout_weight="1"
-                    android:orientation="vertical"
                     android:background="@drawable/bg_rounded_white"
                     android:elevation="2dp"
-                    android:padding="10dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_margin="10dp">
+                    android:orientation="vertical"
+                    android:padding="10dp">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="History Map"
                         android:gravity="center"
-                        android:textStyle="bold"
-                        android:textSize="20sp"/>
+                        android:text="Verify Attend"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
 
-                    <ImageView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:src="@drawable/map_pin"
+                    <com.airbnb.lottie.LottieAnimationView
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
                         android:layout_gravity="center"
-                        android:layout_margin="10dp"/>
+                        android:layout_margin="10dp"
+                        app:lottie_autoPlay="true"
+                        app:lottie_fileName="verify.json" />
 
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/historyabsen_button"
+                <View
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:background="@drawable/bg_rounded_white"
-                    android:elevation="2dp"
-                    android:padding="10dp"
-                    android:layout_margin="10dp">
+                    android:layout_height="0dp"
+                    android:layout_weight="0.5" />
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="History Absen"
-                        android:gravity="center"
-                        android:textStyle="bold"
-                        android:textSize="20sp"/>
+                <!--                <LinearLayout-->
+                <!--                    android:id="@+id/historymap_button"-->
+                <!--                    android:layout_width="0dp"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:layout_margin="10dp"-->
+                <!--                    android:layout_marginRight="20dp"-->
+                <!--                    android:layout_weight="1"-->
+                <!--                    android:background="@drawable/bg_rounded_white"-->
+                <!--                    android:elevation="2dp"-->
+                <!--                    android:orientation="vertical"-->
+                <!--                    android:padding="10dp">-->
 
-                    <ImageView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:src="@drawable/file_text"
-                        android:layout_gravity="center"
-                        android:layout_margin="10dp"/>
+                <!--                    <TextView-->
+                <!--                        android:layout_width="match_parent"-->
+                <!--                        android:layout_height="wrap_content"-->
+                <!--                        android:gravity="center"-->
+                <!--                        android:text="History Map"-->
+                <!--                        android:textSize="20sp"-->
+                <!--                        android:textStyle="bold" />-->
 
-                </LinearLayout>
+                <!--                    <ImageView-->
+                <!--                        android:layout_width="50dp"-->
+                <!--                        android:layout_height="50dp"-->
+                <!--                        android:layout_gravity="center"-->
+                <!--                        android:layout_margin="10dp"-->
+                <!--                        android:src="@drawable/map_pin" />-->
+
+                <!--                </LinearLayout>-->
+
+                <!--                <LinearLayout-->
+                <!--                    android:id="@+id/historyabsen_button"-->
+                <!--                    android:layout_width="0dp"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:layout_margin="10dp"-->
+                <!--                    android:layout_weight="1"-->
+                <!--                    android:background="@drawable/bg_rounded_white"-->
+                <!--                    android:elevation="2dp"-->
+                <!--                    android:orientation="vertical"-->
+                <!--                    android:padding="10dp">-->
+
+                <!--                    <TextView-->
+                <!--                        android:layout_width="match_parent"-->
+                <!--                        android:layout_height="wrap_content"-->
+                <!--                        android:gravity="center"-->
+                <!--                        android:text="History Absen"-->
+                <!--                        android:textSize="20sp"-->
+                <!--                        android:textStyle="bold" />-->
+
+                <!--                    <ImageView-->
+                <!--                        android:layout_width="50dp"-->
+                <!--                        android:layout_height="50dp"-->
+                <!--                        android:layout_gravity="center"-->
+                <!--                        android:layout_margin="10dp"-->
+                <!--                        android:src="@drawable/file_text" />-->
+
+                <!--                </LinearLayout>-->
 
             </LinearLayout>
             <!-- History End-->

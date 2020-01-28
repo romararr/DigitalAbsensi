@@ -1,6 +1,6 @@
 package romara.rr.pdsidigitalabsensi.interfaces.login
 
-import romara.rr.pdsidigitalabsensi.model.Location.MLocation
+import romara.rr.pdsidigitalabsensi.model.location.MLocation
 
 interface iLogs {
 

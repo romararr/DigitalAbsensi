@@ -7,14 +7,15 @@ import okhttp3.Response
 import romara.rr.pdsidigitalabsensi.ext.spGetToken
 import romara.rr.pdsidigitalabsensi.local.SharedPrefManager
 
-class CustomInterceptor(contexts: Context): Interceptor {
+class CustomInterceptor(contexts: Context) : Interceptor {
 
     var context: Context = contexts
 
     override fun intercept(chain: Interceptor.Chain): Response {
-        val token =  SharedPrefManager.getInstance(context).getToken()
+        val token = context.spGetToken()
         var request = chain.request()
-        request = request.newBuilder().addHeader("Authorization", token.toString()).build()
+
+        if(token.isNotEmpty()) request = request.newBuilder().addHeader("Authorization", token).build()
 
         return chain.proceed(request)
     }

@@ -12,8 +12,11 @@ import org.jetbrains.anko.toast
 import romara.rr.pdsidigitalabsensi.constants.Constant
 import romara.rr.pdsidigitalabsensi.R
 import romara.rr.pdsidigitalabsensi.base.logs.RVLogsAdapter
+import romara.rr.pdsidigitalabsensi.ext.gone
+import romara.rr.pdsidigitalabsensi.ext.initTime
+import romara.rr.pdsidigitalabsensi.ext.visible
 import romara.rr.pdsidigitalabsensi.interfaces.login.iLogs
-import romara.rr.pdsidigitalabsensi.model.Location.MLocation
+import romara.rr.pdsidigitalabsensi.model.location.MLocation
 import romara.rr.pdsidigitalabsensi.presenter.LogPresenter
 
 class LogsActivity : AppCompatActivity(), iLogs {
@@ -30,9 +33,10 @@ class LogsActivity : AppCompatActivity(), iLogs {
 
         // Init
         presenter
+        initTime()
         rvAdapter = RVLogsAdapter { position -> null }
         presenter.onGetData(this)
-//        dummyRV()
+        header_title.text = "Recent Location"
 
         // Init Value
 //        date_text.text = searchDate
@@ -52,6 +56,8 @@ class LogsActivity : AppCompatActivity(), iLogs {
 
     override fun onDataCompleteFromApi(q: MLocation) {
         if (q.status == true) {
+            loading_view.gone()
+            recyclerview.visible()
             recyclerview.apply {
                 layoutManager = LinearLayoutManager(context)
                 adapter = rvAdapter

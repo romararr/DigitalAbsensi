@@ -4,14 +4,15 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
-import java.time.LocalDateTime
+import org.threeten.bp.LocalDate
 
 class SharedPrefManager private constructor(private val context: Context) {
 
     companion object {
         private val SP_TOKEN = "token_shared_pref"
+        private val SP_ROLE = "role_shared_pref"
         private val SP_USER = "user_shared_pref"
+        private val SP_NIP = "nip_shared_pref"
         private val SP_DATENOW = "now_shared_pref"
         private val SP_TIME_IN = "come_shared_pref"
         private val SP_TIME_OUT = "return_shared_pref"
@@ -44,6 +45,12 @@ class SharedPrefManager private constructor(private val context: Context) {
         editor.apply()
     }
 
+    fun saveRole(role: String){
+        val editor = pref(SP_ROLE).edit()
+        editor.putString("role", role)
+        editor.apply()
+    }
+
     fun saveLocation(key: String, coor: Double){
         val editor = pref(SP_LOC).edit()
         editor.putString(key, coor.toString())
@@ -53,6 +60,12 @@ class SharedPrefManager private constructor(private val context: Context) {
     fun saveUser(user: String) {
         val editor = pref(SP_USER).edit()
         editor.putString("username", user)
+        editor.apply()
+    }
+
+    fun saveNip(nip: String){
+        val editor = pref(SP_NIP).edit()
+        editor.putString("nip", nip)
         editor.apply()
     }
 
@@ -94,8 +107,16 @@ class SharedPrefManager private constructor(private val context: Context) {
         return pref(SP_TOKEN).getString("token", "")
     }
 
+    fun getRole(): String? {
+        return pref(SP_ROLE).getString("role", "user")
+    }
+
     fun getUser(): String? {
         return pref(SP_USER).getString("username", "username")
+    }
+
+    fun getNip(): String? {
+        return pref(SP_NIP).getString("nip", "")
     }
 
     fun getTimeIn(): String? {
@@ -118,18 +139,16 @@ class SharedPrefManager private constructor(private val context: Context) {
         return pref(SP_LOC).getString(key, "0")
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun getToday(): Boolean {
-        return pref(SP_DATENOW).getInt("datenow", 0).equals(LocalDateTime.now().dayOfMonth)
+        return pref(SP_DATENOW).getInt("datenow", 0).equals(LocalDate.now().dayOfMonth)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun clearRecentTime() {
         saveTimeIn("")
         saveTimeOut("")
         saveBreak("")
         saveEndBreak("")
-        saveDateNow(LocalDateTime.now().dayOfMonth)
+        saveDateNow(LocalDate.now().dayOfMonth)
     }
 
     fun clear(): Boolean {

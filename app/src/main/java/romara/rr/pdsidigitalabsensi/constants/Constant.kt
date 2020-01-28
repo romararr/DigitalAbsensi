@@ -1,12 +1,35 @@
 package romara.rr.pdsidigitalabsensi.constants
 
-import romara.rr.pdsidigitalabsensi.model.Location.MLogUser
+import romara.rr.pdsidigitalabsensi.model.approval.MApproveUser
+import romara.rr.pdsidigitalabsensi.model.location.MLocation
+import romara.rr.pdsidigitalabsensi.model.location.MLogUser
 
 object Constant {
-    fun dataLogAbsen(): MutableList<MLogUser>{
+
+    fun emptyAttendRes(): MLocation {
+        return MLocation(true, "", "", 0, 0, 0, 0, 0, emptyUserData())
+    }
+
+    fun emptyUserData(): MutableList<MLogUser> {
         return mutableListOf(
-            MLogUser("205", "1238123", "yoga.hermawan", "2020-01-20 07:45:08.000", -6.3891, 106.8583),
-            MLogUser("205", "1238123", "yoga.hermawan", "2020-01-20 07:45:08.000", -6.3891, 106.8583)
+                MLogUser("", "", "", "", 0.0, 0.0)
+        )
+    }
+
+    fun dataLogAbsen(): MutableList<MLogUser> {
+        return mutableListOf(
+                MLogUser("205", "1238123", "yoga.hermawan", "2020-01-20 07:45:08.000", -6.3891, 106.8583),
+                MLogUser("205", "1238123", "yoga.hermawan", "2020-01-20 07:45:08.000", -6.3891, 106.8583)
+        )
+    }
+
+    fun dataApproval(): MutableList<MApproveUser> {
+        return mutableListOf(
+                MApproveUser("0", "12345678", "Midoriya Izuku", "come", "2020-01-20", "07:32", "Saya sedang ada dikantor cabang untuk keperluan meeting bersama Dirut"),
+                MApproveUser("1", "32872392", "Light Yagami", "come", "2020-01-20", "07:21", "Saya sedang ada dikantor cabang untuk keperluan meeting bersama Dirut"),
+                MApproveUser("2", "12390839", "Sarada Uchiha", "return", "2020-01-20", "17:32", "Saya sedang ada dikantor cabang untuk keperluan meeting bersama Dirut"),
+                MApproveUser("3", "32498501", "Nobi Nobita", "come", "2020-01-20", "07:41", "Saya sedang ada dikantor cabang untuk keperluan meeting bersama Dirut"),
+                MApproveUser("4", "92390340", "Kazuki Ito", "return", "2020-01-20", "16:41", "Saya sedang ada dikantor cabang untuk keperluan meeting bersama Dirut")
         )
     }
 }
