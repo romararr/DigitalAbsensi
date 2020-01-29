@@ -14,11 +14,11 @@ data class MUserProfile(
     @SerializedName("email")
     val email: String,
     @SerializedName("nohp")
-    val nohp: String,
+    val nohp: String?,
     @SerializedName("role")
     val role: String,
     @SerializedName("pos_id")
-    val posid: String,
+    val posid: String?,
     @SerializedName("status")
     val status: String,
     @SerializedName("time_come")

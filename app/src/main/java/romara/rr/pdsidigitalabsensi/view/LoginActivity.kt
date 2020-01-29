@@ -54,31 +54,41 @@ class LoginActivity : BaseActivity(), iLogin {
             return
         }
 
-        loading.visible()
-        login_button.gone()
+        onLoading(true)
         presenter.onLogin(this, username, password)
     }
 
     private fun dummyLogin() {
         spSetToday()
-
         startActivity(intentFor<HomeActivity>().newTask())
     }
 
+    override fun onLoading(status: Boolean?) {
+        if (status == true){
+            loading.visible()
+            login_button.gone()
+        } else {
+            loading.gone()
+            login_button.visible()
+        }
+    }
+
     override fun onDataCompleteFromApi(q: MUserLogin) {
+
+        onLoading()
 
         spSetToken(q.token)
         spSetUserdata(q.data.username)
         spSetNip(q.data.nip)
         spSetRole(q.data.role)
+        spSetPosid(q.data.posid.toString())
         spSetToday()
 
         startActivity(intentFor<HomeActivity>().newTask())
     }
 
     override fun onDataErrorFromApi(throwable: Throwable) {
-        loading.gone()
-        login_button.visible()
+        onLoading()
         toast("Network Error")
         Log.d("ERR API", throwable.toString())
     }

@@ -19,6 +19,7 @@ import com.google.android.gms.location.*
 import kotlinx.android.synthetic.main.new_home_layout.*
 import kotlinx.android.synthetic.main.out_office_note.*
 import kotlinx.android.synthetic.main.out_office_note.view.*
+import org.jetbrains.anko.longToast
 import org.jetbrains.anko.sdk27.coroutines.onClick
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
@@ -41,10 +42,6 @@ class HomeActivity : BaseActivity(), iHome {
     private val presenter by lazy { HomePresenter(this) }
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     val PERMISSION_ID = 42
-
-    // Absensi State
-    var absenPressed: Boolean? = false
-    var breakPressed: Boolean? = false
 
     var come = spGetTimeCome()
     var out = spGetTimeOut()
@@ -131,15 +128,12 @@ class HomeActivity : BaseActivity(), iHome {
 
     override fun onDataCompleteFromApi(q: MLocation, type: String, resCondition: String) {
 
-        absenPressed = false
-        breakPressed = false
-        item_menu.visible()
-        loading_view.gone()
+        endLoading()
 
         if (q.message == ConstVar.EXPIRED) {
             toast("Silahkan Login kembali")
             return onLogout(this)
-        }
+        } // Token Expired
 
         if (q.status == false) {
             when (q.condition) {
@@ -152,26 +146,65 @@ class HomeActivity : BaseActivity(), iHome {
 
         // Absen Response
         when (type) {
-            ConstVar.COME -> absenCome(true)
+            ConstVar.COME -> {
+                if (q.condition == ConstVar.OUTOFFICE) {
+                    showNoteDialog(ConstVar.COME)
+                    return
+                }
+
+                if (ConstVar.FAR_FROMOFFICE in q.message) {
+                    longToast(ConstVar.MSG_FAROFFICE)
+                    endLoading()
+                }
+                else absenCome(true)
+
+            } // Absen Datang
             ConstVar.RETURN -> {
                 if (come.isEmpty()) {
                     toast("Anda belum absen datang")
                     return
                 }
 
-                if (q.condition == ConstVar.MANUAL) {
-                    showNoteDialog(ConstVar.MANUAL)
+                if (q.condition == ConstVar.OUTOFFICE || q.condition == ConstVar.MANUAL) {
+                    showNoteDialog(ConstVar.RETURN)
                     return
                 }
 
-                absenReturn(true)
-            }
-            ConstVar.BREAK -> absenBreak(true)
-            ConstVar.ENDBREAK -> absenEndBreak(true)
-            else -> {
-                loading_view.gone()
-                item_menu.visible()
-            }
+                if (ConstVar.FAR_FROMOFFICE in q.message) {
+                    longToast(ConstVar.MSG_FAROFFICE)
+                    endLoading()
+                }
+                else absenReturn(true)
+
+            } // Absen Pulang
+            ConstVar.BREAK -> {
+                if (q.condition == ConstVar.OUTOFFICE) {
+                    showNoteDialog(ConstVar.BREAK)
+                    return
+                }
+
+                if (ConstVar.FAR_FROMOFFICE in q.message) {
+                    longToast(ConstVar.MSG_FAROFFICE)
+                    endLoading()
+                }
+                else absenBreak(true)
+
+            } // Absen Istirahat
+            ConstVar.ENDBREAK -> {
+
+                if (q.condition == ConstVar.OUTOFFICE) {
+                    showNoteDialog(ConstVar.ENDBREAK)
+                    return
+                }
+
+                if (ConstVar.FAR_FROMOFFICE in q.message) {
+                    longToast(ConstVar.MSG_FAROFFICE)
+                    endLoading()
+                }
+                else absenEndBreak(true)
+
+            } // Absen Selesai Istirahat
+            else -> endLoading()
         }
     }
 
@@ -199,6 +232,16 @@ class HomeActivity : BaseActivity(), iHome {
         getFirstView(today)
     }
 
+    private fun endLoading() {
+        item_menu.visible()
+        loading_view.gone()
+    } // End Loading
+
+    private fun startLoading() {
+        item_menu.gone()
+        loading_view.visible()
+    } // Start Loading
+
     private fun absenCome(res: Boolean? = false) {
         if (res == true) {
             spSetTimeCome()
@@ -206,8 +249,7 @@ class HomeActivity : BaseActivity(), iHome {
             return
         }
 
-        item_menu.gone()
-        loading_view.visible()
+        startLoading()
         presenter.onAttend(applicationContext, ConstVar.COME, "datang")
     }
 
@@ -219,8 +261,7 @@ class HomeActivity : BaseActivity(), iHome {
             return
         }
 
-        item_menu.gone()
-        loading_view.visible()
+        startLoading()
         presenter.onAttend(applicationContext, ConstVar.RETURN, "pulang")
     }
 
@@ -232,8 +273,7 @@ class HomeActivity : BaseActivity(), iHome {
             return
         }
 
-        item_menu.gone()
-        loading_view.visible()
+        startLoading()
         presenter.onAttend(applicationContext, ConstVar.BREAK, "istirahat")
     }
 
@@ -245,18 +285,14 @@ class HomeActivity : BaseActivity(), iHome {
             return
         }
 
-        item_menu.gone()
-        loading_view.visible()
+        startLoading()
         presenter.onAttend(applicationContext, ConstVar.ENDBREAK, "selesai istirahat")
 
 //        break_button.setBackgroundResource(R.drawable.rounded_button_disabled)
     }
 
     override fun onDataErrorFromApi(throwable: Throwable) {
-        absenPressed = false
-        breakPressed = false
-        item_menu.visible()
-        loading_view.gone()
+        endLoading()
 //        showErrorDialog()
         toast("Network Error")
         Log.d("ERR API", throwable.toString())
@@ -264,7 +300,7 @@ class HomeActivity : BaseActivity(), iHome {
 
     fun getFirstView(today: Boolean = true) {
 
-//        if (spGetRole().equals("user")) verify_layout.gone()
+//        if (spGetRole().equals(ConstVar.ADM)) verify_layout.visible()
         if (today == false) {
             Log.d("today", "kosong :(")
             spClearTime()
@@ -359,16 +395,18 @@ class HomeActivity : BaseActivity(), iHome {
             if (dialogView.note_text.equals("")) {
                 toast("Note harus diisi")
             } else {
+                startLoading()
                 presenter.onAttendOutOffice(
                         this,
                         condition,
-                        note_text.text.toString()
+                        dialogView.note_text.text.toString()
                 )
+                alertDialog.dismiss()
             }
         }
 
         alertDialog.show()
-    }
+    } // Note Out Office Attend
 
     fun showErrorDialog() {
         val viewGroup = findViewById<ViewGroup>(android.R.id.content)
@@ -405,5 +443,5 @@ class HomeActivity : BaseActivity(), iHome {
 
         popup.show()
 
-    }
+    } // User Menu Popup
 }

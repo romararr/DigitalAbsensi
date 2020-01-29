@@ -11,6 +11,7 @@ class SharedPrefManager private constructor(private val context: Context) {
     companion object {
         private val SP_TOKEN = "token_shared_pref"
         private val SP_ROLE = "role_shared_pref"
+        private val SP_POSID = "posid_shared_pref"
         private val SP_USER = "user_shared_pref"
         private val SP_NIP = "nip_shared_pref"
         private val SP_DATENOW = "now_shared_pref"
@@ -45,13 +46,19 @@ class SharedPrefManager private constructor(private val context: Context) {
         editor.apply()
     }
 
-    fun saveRole(role: String){
+    fun saveRole(role: String) {
         val editor = pref(SP_ROLE).edit()
         editor.putString("role", role)
         editor.apply()
     }
 
-    fun saveLocation(key: String, coor: Double){
+    fun savePosId(posid: String) {
+        val editor = pref(SP_POSID).edit()
+        editor.putString("posid", posid)
+        editor.apply()
+    }
+
+    fun saveLocation(key: String, coor: Double) {
         val editor = pref(SP_LOC).edit()
         editor.putString(key, coor.toString())
         editor.apply()
@@ -63,7 +70,7 @@ class SharedPrefManager private constructor(private val context: Context) {
         editor.apply()
     }
 
-    fun saveNip(nip: String){
+    fun saveNip(nip: String) {
         val editor = pref(SP_NIP).edit()
         editor.putString("nip", nip)
         editor.apply()
@@ -111,6 +118,10 @@ class SharedPrefManager private constructor(private val context: Context) {
         return pref(SP_ROLE).getString("role", "user")
     }
 
+    fun getPosId(): String? {
+        return pref(SP_ROLE).getString("posid", "")
+    }
+
     fun getUser(): String? {
         return pref(SP_USER).getString("username", "username")
     }
@@ -131,11 +142,11 @@ class SharedPrefManager private constructor(private val context: Context) {
         return pref(SP_BREAK).getString("break", "")
     }
 
-    fun getEndBreak () : String? {
+    fun getEndBreak(): String? {
         return pref(SP_END_BREAK).getString("endbreak", "")
     }
 
-    fun getLocation(key: String) : String? {
+    fun getLocation(key: String): String? {
         return pref(SP_LOC).getString(key, "0")
     }
 
@@ -143,20 +154,20 @@ class SharedPrefManager private constructor(private val context: Context) {
         return pref(SP_DATENOW).getInt("datenow", 0).equals(LocalDate.now().dayOfMonth)
     }
 
+    fun reset(key: Array<String>) {
+        for (i in key) {
+            pref(i).edit().clear().apply()
+        }
+    }
+
     fun clearRecentTime() {
-        saveTimeIn("")
-        saveTimeOut("")
-        saveBreak("")
-        saveEndBreak("")
+        reset(arrayOf(SP_TIME_IN, SP_TIME_OUT, SP_BREAK, SP_END_BREAK))
         saveDateNow(LocalDate.now().dayOfMonth)
     }
 
     fun clear(): Boolean {
         return try {
-            val sharedPreferences = context.getSharedPreferences(SP_TOKEN, Context.MODE_PRIVATE)
-            val editor = sharedPreferences.edit()
-            editor.clear()
-            editor.apply()
+            reset(arrayOf(SP_TOKEN, SP_USER, SP_NIP, SP_ROLE, SP_POSID))
             true
         } catch (e: Exception) {
             false

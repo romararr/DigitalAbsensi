@@ -18,7 +18,9 @@ class ConstVar {
         val SUDAHABSEN = "SUDAHABSEN"
         val ATTENDYET = "BELUMSENDDATANG"
         val MANUAL = "MANUAL"
+        val FAR_FROMOFFICE = "Due to far from office"
 
         val EXPIRED = "Token is Expired"
+        val MSG_FAROFFICE = "Anda absen di luar kantor, silahkan tunggu persetujuan atasan."
     }
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/approve_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -25,17 +26,17 @@
                 android:id="@+id/profile_pic"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
+                android:layout_marginRight="10dp"
                 android:background="@drawable/rounded_button_disabled"
                 android:padding="3dp"
-                android:src="@drawable/default_profile"
-                android:layout_marginRight="10dp"/>
+                android:src="@drawable/default_profile" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:orientation="vertical"
-                android:layout_marginRight="20dp">
+                android:layout_marginRight="20dp"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/approve_name"
@@ -50,7 +51,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="NIP. ..."
-                    android:textSize="12dp"/>
+                    android:textSize="12dp" />
 
             </LinearLayout>
 
@@ -70,9 +71,9 @@
                 android:id="@+id/type_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:text="Masuk"
-                android:textStyle="bold"
-                android:gravity="center"/>
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/time_view"
@@ -80,7 +81,7 @@
                 android:layout_height="wrap_content"
                 android:text="00:00"
                 android:textSize="34sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
         </LinearLayout>
         <!-- JAM END-->
@@ -93,10 +94,10 @@
 
         <!-- REMARK -->
         <LinearLayout
-            android:layout_toLeftOf="@+id/action_group"
             android:id="@+id/remark_group"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/action_group"
             android:orientation="vertical">
 
             <TextView
@@ -110,10 +111,10 @@
                 android:id="@+id/remark_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
                 android:maxLines="4"
                 android:text="Empty remarks"
-                android:layout_marginRight="10dp"
-                android:textSize="12dp"/>
+                android:textSize="12dp" />
 
 
         </LinearLayout>
@@ -122,11 +123,20 @@
         <!-- ACTION-->
         <LinearLayout
             android:id="@+id/action_group"
-            android:layout_width="wrap_content"
+            android:layout_width="110dp"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
             android:layout_gravity="top"
-            android:layout_marginTop="10dp"
-            android:layout_alignParentRight="true">
+            android:gravity="center"
+            android:layout_marginTop="10dp">
+
+            <ImageView
+                android:id="@+id/status_view"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:src="@drawable/approved"
+                android:visibility="gone"/>
 
             <LinearLayout
                 android:id="@+id/reject_button"

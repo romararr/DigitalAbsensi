@@ -20,6 +20,15 @@ fun Context.spSetToken(data: String) {
     pref(this).saveToken(data)
 }
 
+// POS ID
+fun Context.spGetPosid(): String {
+    return pref(this).getPosId().toString()
+}
+
+fun Context.spSetPosid(data: String) {
+    pref(this).savePosId(data)
+}
+
 // Role
 fun Context.spGetRole(): String {
     return pref(this).getRole().toString()

@@ -9,6 +9,7 @@ import retrofit2.Response
 import romara.rr.pdsidigitalabsensi.api.API
 import romara.rr.pdsidigitalabsensi.interfaces.login.iLogin
 import romara.rr.pdsidigitalabsensi.model.user.MUserLogin
+import romara.rr.pdsidigitalabsensi.view.LoginActivity
 
 class LoginPresenter(context: Context) {
 
@@ -21,19 +22,22 @@ class LoginPresenter(context: Context) {
         requestBody.put("password", password)
 
         API.create(context).login(requestBody)
-            .enqueue(object : Callback<MUserLogin> {
-                override fun onFailure(call: Call<MUserLogin>, t: Throwable) {
-                    iLogin.onDataErrorFromApi(t)
-                    t.printStackTrace();
-                }
+                .enqueue(object : Callback<MUserLogin> {
+                    override fun onFailure(call: Call<MUserLogin>, t: Throwable) {
+                        iLogin.onDataErrorFromApi(t)
+                        t.printStackTrace();
+                    }
 
-                override fun onResponse(call: Call<MUserLogin>, response: Response<MUserLogin>) {
-                    Log.d("LOGINDATA", response.body().toString())
+                    override fun onResponse(call: Call<MUserLogin>, response: Response<MUserLogin>) {
+                        Log.d("LOGINDATA", response.body().toString())
 
-                    if (response.body()?.status == true) iLogin.onDataCompleteFromApi(response.body() as MUserLogin)
-                    else (Toast.makeText(context, response.body()!!.message, Toast.LENGTH_SHORT).show())
-                }
-            })
+                        if (response.body()?.status == true) iLogin.onDataCompleteFromApi(response.body() as MUserLogin)
+                        else {
+                            iLogin.onLoading()
+                            (Toast.makeText(context, "Username atau Password tidak sesuai", Toast.LENGTH_SHORT).show())
+                        }
+                    }
+                })
 
     }
 }

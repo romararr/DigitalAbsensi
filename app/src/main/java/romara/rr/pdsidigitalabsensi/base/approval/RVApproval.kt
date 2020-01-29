@@ -5,17 +5,27 @@ import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RelativeLayout
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.approve_layout.view.*
 import org.jetbrains.anko.sdk27.coroutines.onClick
 import romara.rr.pdsidigitalabsensi.R
 import romara.rr.pdsidigitalabsensi.base.BaseListAdapter
+import romara.rr.pdsidigitalabsensi.constants.ConstVar
+import romara.rr.pdsidigitalabsensi.ext.gone
+import romara.rr.pdsidigitalabsensi.ext.spGetRole
+import romara.rr.pdsidigitalabsensi.ext.visible
+import romara.rr.pdsidigitalabsensi.local.SharedPrefManager
 import romara.rr.pdsidigitalabsensi.model.approval.MApproveUser
 
-class RVApproveAdapter(private val listener: (position: Int, action: String) -> Unit) :
-        BaseListAdapter<RecyclerView.ViewHolder, MApproveUser>() {
+class RVApproveAdapter(
+    context: Context,
+    private val listener: (position: Int, action: String) -> Unit
+) :
+    BaseListAdapter<RecyclerView.ViewHolder, MApproveUser>() {
 
     private var data = mutableListOf<MApproveUser>()
+    private var ctx = context
 
     override fun setData(data: MutableList<MApproveUser>) {
         this.data = data
@@ -42,7 +52,7 @@ class RVApproveAdapter(private val listener: (position: Int, action: String) -> 
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is Holder -> holder.bindAttend(data[position])
+            is Holder -> holder.bindAttend(ctx, data[position])
         }
     }
 
@@ -50,24 +60,31 @@ class RVApproveAdapter(private val listener: (position: Int, action: String) -> 
 
 }
 
-class Holder(v: View, listener: (position: Int, action: String) -> Unit) : RecyclerView.ViewHolder(v) {
+class Holder(v: View, listener: (position: Int, action: String) -> Unit) :
+    RecyclerView.ViewHolder(v) {
 
     init {
         itemView.approve_button.onClick { listener(adapterPosition, "A") }
         itemView.reject_button.onClick { listener(adapterPosition, "R") }
     }
 
-    fun bindAttend(data: MApproveUser) {
+    fun bindAttend(context: Context, data: MApproveUser) {
 
-        if (data.type == "return") {
+        if (data.status == false) {
             itemView.approve_card.setBackgroundResource(R.drawable.bg_approve_return)
             itemView.type_text.text = "Pulang"
+            itemView.status_view.setImageResource(R.drawable.rejected)
         }
         itemView.approve_name.text = data.fullname
         itemView.approve_nip.text = "NIP." + data.nip
         itemView.time_view.text = data.time.split(".")[0]
         itemView.remark_text.text = data.remark
 
+        if (context.spGetRole() == ConstVar.USR) {
+            itemView.approve_button.gone()
+            itemView.reject_button.gone()
+            itemView.status_view.visible()
+        }
     }
 
 }

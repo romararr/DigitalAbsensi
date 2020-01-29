@@ -21,6 +21,7 @@ import romara.rr.pdsidigitalabsensi.interfaces.approval.iApproval
 import romara.rr.pdsidigitalabsensi.model.approval.MApprove
 import romara.rr.pdsidigitalabsensi.presenter.ApprovePresenter
 
+
 class ApprovalActivity : AppCompatActivity(), iApproval {
 
     private val presenter by lazy { ApprovePresenter(this) }
@@ -34,9 +35,10 @@ class ApprovalActivity : AppCompatActivity(), iApproval {
         // Init
         presenter
 //        presenter.getApprovalData(this, 1)
-        rvAdapter = RVApproveAdapter { position, action ->
+
+        rvAdapter = RVApproveAdapter(this, { position, action ->
             presenter.approveUser(this, mData.data[position].id, action)
-        }
+        })
         header_title.text = "Approve Absen"
         dummyRV()
 
@@ -60,7 +62,7 @@ class ApprovalActivity : AppCompatActivity(), iApproval {
     fun showErrorDialog() {
         val viewGroup = findViewById<ViewGroup>(android.R.id.content)
         val dialogView: View =
-                LayoutInflater.from(this).inflate(R.layout.net_error_layout, viewGroup, false)
+            LayoutInflater.from(this).inflate(R.layout.net_error_layout, viewGroup, false)
         val builder: AlertDialog.Builder = AlertDialog.Builder(this)
         builder.setView(dialogView)
 

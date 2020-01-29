@@ -84,7 +84,7 @@ class HomePresenter(context: Context) {
     }
 
     // Attend Out of Office
-    fun onAttendOutOffice(context: Context, condition: String, note: String = "out office come") {
+    fun onAttendOutOffice(context: Context, condition: String, note: String = "out office attend") {
         API.create(context).attendOutOffice(attendBody(context, condition, note))
                 .enqueue(object : Callback<MLocation> {
                     override fun onFailure(call: Call<MLocation>, t: Throwable) {
