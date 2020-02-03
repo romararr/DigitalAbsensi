@@ -9,6 +9,8 @@ data class MApprove(
         val message: String,
         @SerializedName("total_row")
         val row: Int,
+        @SerializedName("now_data_show")
+        val nowShowing: Int,
         @SerializedName("limit")
         val limit: Int,
         @SerializedName("total_page")

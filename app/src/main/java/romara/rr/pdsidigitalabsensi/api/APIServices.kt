@@ -32,7 +32,7 @@ interface APIServices {
     @POST("attendance/attend_personal/")
     fun getPersonalAbsen(@Body body: MutableMap<String, String>): Call<MAttend>
 
-    @POST("attendance/attend_all/")
+    @POST("attendance/approval_all/")
     fun getApprovalAttend(@Body body: MutableMap<String, String>): Call<MApprove>
 
     @POST("attendance/do_approve/")

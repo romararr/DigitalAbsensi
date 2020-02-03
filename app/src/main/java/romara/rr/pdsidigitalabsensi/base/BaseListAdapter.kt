@@ -7,4 +7,5 @@ abstract class BaseListAdapter<H, T> : RecyclerView.Adapter<H>() where H : Recyc
     abstract fun getData(position: Int): T
     abstract fun addData(data: MutableList<T>)
     abstract fun getAll(): MutableList<T>
+    abstract fun removeItem(position: Int)
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/rootLayout"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
@@ -54,7 +54,7 @@
                             android:maxLines="1"
                             android:text="..."
                             android:textColor="@color/white"
-                            android:textSize="18sp"
+                            android:textSize="16sp"
                             android:textStyle="bold" />
 
                         <TextView
@@ -62,7 +62,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="NIP. ..."
-                            android:textColor="@color/white" />
+                            android:textColor="@color/white"
+                            android:textSize="12sp" />
 
                     </LinearLayout>
 
@@ -72,9 +73,9 @@
 
                         <ImageView
                             android:id="@+id/menu_button"
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:layout_gravity="center"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_marginTop="8dp"
                             android:src="@drawable/arrow_down" />
                     </LinearLayout>
 
@@ -95,7 +96,7 @@
                         android:layout_height="wrap_content"
                         android:text="--:--"
                         android:textColor="@color/white"
-                        android:textSize="40sp"
+                        android:textSize="36sp"
                         android:textStyle="bold" />
 
                 </LinearLayout>
@@ -123,7 +124,7 @@
                         android:layout_marginBottom="4dp"
                         android:text="Lokasi Saat Ini"
                         android:textColor="@color/white"
-                        android:textSize="18sp"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <LinearLayout
@@ -147,7 +148,7 @@
                             android:maxLines="2"
                             android:text="..."
                             android:textColor="@color/white"
-                            android:textSize="16sp"
+                            android:textSize="14sp"
                             android:textStyle="bold" />
 
                     </LinearLayout>

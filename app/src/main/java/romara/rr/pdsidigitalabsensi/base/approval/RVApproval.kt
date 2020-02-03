@@ -1,11 +1,9 @@
 package romara.rr.pdsidigitalabsensi.base.approval
 
 import android.content.Context
-import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RelativeLayout
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.approve_layout.view.*
 import org.jetbrains.anko.sdk27.coroutines.onClick
@@ -15,7 +13,6 @@ import romara.rr.pdsidigitalabsensi.constants.ConstVar
 import romara.rr.pdsidigitalabsensi.ext.gone
 import romara.rr.pdsidigitalabsensi.ext.spGetRole
 import romara.rr.pdsidigitalabsensi.ext.visible
-import romara.rr.pdsidigitalabsensi.local.SharedPrefManager
 import romara.rr.pdsidigitalabsensi.model.approval.MApproveUser
 
 class RVApproveAdapter(
@@ -29,6 +26,11 @@ class RVApproveAdapter(
 
     override fun setData(data: MutableList<MApproveUser>) {
         this.data = data
+        this.notifyDataSetChanged()
+    }
+
+    override fun removeItem(position: Int) {
+        this.data.removeAt(position)
         this.notifyDataSetChanged()
     }
 
@@ -70,21 +72,23 @@ class Holder(v: View, listener: (position: Int, action: String) -> Unit) :
 
     fun bindAttend(context: Context, data: MApproveUser) {
 
-        if (data.status == false) {
-            itemView.approve_card.setBackgroundResource(R.drawable.bg_approve_return)
-            itemView.type_text.text = "Pulang"
-            itemView.status_view.setImageResource(R.drawable.rejected)
-        }
+        val time = data.time.split(".")[0].split(":")
+
+//        if (data.status == false) {
+//            itemView.approve_card.setBackgroundResource(R.drawable.bg_approve_reject)
+//            itemView.type_text.text = "Pulang"
+//            itemView.status_view.setImageResource(R.drawable.rejected)
+//        }
         itemView.approve_name.text = data.fullname
         itemView.approve_nip.text = "NIP." + data.nip
-        itemView.time_view.text = data.time.split(".")[0]
+        itemView.time_view.text = time[0] + ":" + time[1]
         itemView.remark_text.text = data.remark
 
-        if (context.spGetRole() == ConstVar.USR) {
-            itemView.approve_button.gone()
-            itemView.reject_button.gone()
-            itemView.status_view.visible()
-        }
+//        if (context.spGetRole() == ConstVar.USR) {
+//            itemView.approve_button.gone()
+//            itemView.reject_button.gone()
+//            itemView.status_view.visible()
+//        }
     }
 
 }

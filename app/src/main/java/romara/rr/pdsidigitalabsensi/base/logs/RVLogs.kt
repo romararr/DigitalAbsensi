@@ -49,6 +49,11 @@ class RVLogsAdapter(private val listener: (position: Int) -> Unit) :
 
     override fun getItemCount(): Int = data.size
 
+    override fun removeItem(position: Int) {
+        this.data.removeAt(position)
+        this.notifyDataSetChanged()
+    }
+
 }
 
 class Holder(v: View, listener: (position: Int) -> Unit) : RecyclerView.ViewHolder(v) {

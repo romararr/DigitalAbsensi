@@ -64,7 +64,6 @@ class HomeActivity : BaseActivity(), iHome {
         // Init
         presenter
         initTime()
-        profile_name.text = spGetUser()
         profile_nip.text = "NIP." + spGetNip()
 
         Log.d("TOKEN", spGetToken())
@@ -211,6 +210,8 @@ class HomeActivity : BaseActivity(), iHome {
     override fun onGetAbsenCompleteApi(q: MUser) {
         val data = q.data[0]
 //        date + "T" + data.time_come.split(".")[0]
+
+        profile_name.text = data.fullname
 
         if (data.time_come.isNullOrBlank() == false) {
             spSetTimeCome(data.time_come)

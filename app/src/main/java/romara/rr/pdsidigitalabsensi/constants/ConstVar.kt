@@ -3,7 +3,7 @@ package romara.rr.pdsidigitalabsensi.constants
 class ConstVar {
     companion object {
         val BASE_URL = "https://apps.pertamina.com/PDSIDAS/api/"
-        val DEV_URL = "https://apps.pertamina.com/PDSIDAS/apidev/"
+        val DEV_URL = "https://apps.pertamina.com/PDSIDAS/apidev/index.php/"
         val LOCAL_URL = "http://10.13.1.55/PDSIDAS/apidev/"
 
         val USR = "user"

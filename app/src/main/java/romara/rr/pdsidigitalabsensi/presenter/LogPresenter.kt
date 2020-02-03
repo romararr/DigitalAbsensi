@@ -14,9 +14,13 @@ class LogPresenter(context: Context) {
 
     val iLogs = context as iLogs
 
-    fun onGetData(context: Context) {
+    fun onGetData(context: Context, to: String? = "", from: String? = "", page: String? = "1") {
         var requestBody: MutableMap<String, String> = mutableMapOf()
         requestBody.put("username", context.spGetUser())
+        requestBody.put("from", from.toString())
+        requestBody.put("to", to.toString())
+        requestBody.put("page", page.toString())
+        requestBody.put("limit", "30")
 
         API.create(context).logAbsen(requestBody)
             .enqueue(object : Callback<MLocation> {

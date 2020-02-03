@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.Context
 import android.os.Bundle
+import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,9 +18,8 @@ import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
 import romara.rr.pdsidigitalabsensi.R
 import romara.rr.pdsidigitalabsensi.base.absen.RVAbsenAdapter
-import romara.rr.pdsidigitalabsensi.ext.gone
-import romara.rr.pdsidigitalabsensi.ext.initTime
-import romara.rr.pdsidigitalabsensi.ext.visible
+import romara.rr.pdsidigitalabsensi.constants.ConstVar
+import romara.rr.pdsidigitalabsensi.ext.*
 import romara.rr.pdsidigitalabsensi.interfaces.absensi.iAbsensi
 import romara.rr.pdsidigitalabsensi.model.absen.MAttend
 import romara.rr.pdsidigitalabsensi.presenter.AbsensiPresenter
@@ -35,7 +35,12 @@ class AbsensiActivity : AppCompatActivity(), iAbsensi {
     val currentMonth = date.monthValue
     val currentDay = date.dayOfMonth
 
+    var toDate = ""
+    var fromDate = ""
+
+    // Format Date
     val dateFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy")
+    val msFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,14 +49,23 @@ class AbsensiActivity : AppCompatActivity(), iAbsensi {
         // init
         presenter
         initTime()
-        rvAdapter = RVAbsenAdapter { position -> null }
         presenter.onGetData(this)
-        header_title.text = "Recent Absensi"
-
-        back_button.setOnClickListener { onBackPressed() }
-        searchbar.isEnabled = false
+        initView()
 
         initActions()
+    }
+
+    private fun initView() {
+        rvAdapter = RVAbsenAdapter { position -> null }
+
+        header_title.text = "Recent Absensi"
+        searchbar.setHint("From...")
+        searchbar.inputType = InputType.TYPE_NULL
+//        search_icon.setImageResource(R.drawable.cal)
+        search_icon.gone()
+        searchbar_limit.inputType = InputType.TYPE_NULL
+        searchview_limit.visible()
+        search_button.visible()
     }
 
     private fun setRecyclerData(m: MAttend) {
@@ -64,17 +78,30 @@ class AbsensiActivity : AppCompatActivity(), iAbsensi {
     }
 
     override fun onDataCompleteFromApi(q: MAttend) {
+
+        loading.gone()
+
+        if (q.message == ConstVar.EXPIRED) return onExpired(this)
+
         if (q.status == true) {
             loading_view.gone()
             recyclerview.visible()
             setRecyclerData(q)
+            rvAdapter.setData(q.data)
         } else {
+            recyclerview.gone()
+            loading_view.visible()
+            loading_empty.visible()
             toast(q.message)
         }
     }
 
     override fun onDataErrorFromApi(throwable: Throwable) {
 //        showErrorDialog()
+        recyclerview.gone()
+        loading.gone()
+        loading_view.visible()
+        loading_empty.visible()
         toast("Network Error")
     }
 
@@ -90,20 +117,55 @@ class AbsensiActivity : AppCompatActivity(), iAbsensi {
     }
 
     fun initActions() {
-        header_title.onClick {
-            toast("hello")
-            val datepick = DatePickerDialog(
-                applicationContext,
-                DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
-                    val selectedDate = LocalDate.of(year, month + 1, dayOfMonth)
-                    val dateString = selectedDate.format(dateFormatter)
-                    searchbar.setText(dateString)
-                },
-                currentYear,
-                currentMonth - 1,
-                currentDay
-            )
-            datepick.show()
+        back_button.setOnClickListener { onBackPressed() }
+        searchbar.onClick { pickerFromDate() }
+        searchview.onClick { pickerFromDate() }
+        searchbar_limit.onClick { pickerToDate() }
+        searchview_limit.onClick { pickerToDate() }
+        search_button.onClick {
+            var to = toDate.split(" ")[0].replace("/", "-")
+            var from = fromDate.split(" ")[0].replace("/", "-")
+            if (to.isEmpty() || from.isEmpty()) {
+                toast("Tanggal harus lengkap")
+            } else {
+                loading_view.visible()
+                loading.visible()
+                loading_empty.gone()
+                presenter.onGetData(this@AbsensiActivity, to, from)
+            }
         }
+    }
+
+    fun pickerFromDate() {
+        val pickFrom = DatePickerDialog(
+            this,
+            DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
+                val selectedDate = LocalDate.of(year, month + 1, dayOfMonth)
+                val dateString = selectedDate.format(dateFormatter)
+                fromDate = selectedDate.format(msFormatter) + " 00:00:00"
+                searchbar.setText(dateString)
+            },
+            currentYear,
+            currentMonth - 1,
+            currentDay
+        )
+        pickFrom.show()
+    }
+
+    fun pickerToDate() {
+        val pickTo = DatePickerDialog(
+            this,
+            DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
+                val selectedDate = LocalDate.of(year, month + 1, dayOfMonth)
+                val dateString = selectedDate.format(dateFormatter)
+                toDate = selectedDate.format(msFormatter) + " 00:00:00"
+                searchbar_limit.setText(dateString)
+            },
+            currentYear,
+            currentMonth - 1,
+            currentDay
+        )
+        if (searchbar.text.isNotEmpty()) pickTo.datePicker.minDate = getMillis(fromDate)
+        pickTo.show()
     }
 }

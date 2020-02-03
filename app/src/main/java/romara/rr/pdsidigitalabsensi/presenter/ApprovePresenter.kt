@@ -15,12 +15,12 @@ class ApprovePresenter(context: Context) {
 
     val iApprove = context as iApproval
 
-    fun getApprovalData(context: Context, page: Int, search: String? = "", orderby: String? = "date_attend", sort: String? = "ASC") {
+    fun getApprovalData(context: Context, page: Int? = 1, search: String? = "", orderby: String? = "date_attend", sort: Int? = 1) {
         var requestBody: MutableMap<String, String> = mutableMapOf()
         requestBody.put("pos_id", context.spGetPosid())
         requestBody.put("username", context.spGetUser())
         requestBody.put("search", search.toString())
-        requestBody.put("limit", "20")
+        requestBody.put("limit", "100")
         requestBody.put("page", page.toString())
         requestBody.put("order_by", orderby.toString())
         requestBody.put("sort", sort.toString())
@@ -38,10 +38,10 @@ class ApprovePresenter(context: Context) {
                 })
     }
 
-    fun approveUser(context: Context, id: String, action: String) {
+    fun approveUser(context: Context, id: Int, action: String) {
         var requestBody: MutableMap<String, String> = mutableMapOf()
         requestBody.put("username", context.spGetUser())
-        requestBody.put("id", id)
+        requestBody.put("id", id.toString())
         requestBody.put("action", action)
 
         API.create(context).approveAction(requestBody)
