@@ -40,17 +40,17 @@ class LoginActivity : BaseActivity(), iLogin {
 
     }
 
-    fun onLoginCheck() {
+    private fun onLoginCheck() {
         username = input_username.text.toString()
         password = input_password.text.toString()
 
         if (username.isEmpty()) {
-            input_username.setError("Username kosong!")
+            input_username.error = "Username kosong!"
             return
         }
 
         if (password.isEmpty()) {
-            input_password.setError("Password kosong!")
+            input_password.error = "Password kosong!"
             return
         }
 
@@ -74,8 +74,6 @@ class LoginActivity : BaseActivity(), iLogin {
     }
 
     override fun onDataCompleteFromApi(q: MUserLogin) {
-
-        onLoading()
 
         spSetToken(q.token)
         spSetUserdata(q.data.username)

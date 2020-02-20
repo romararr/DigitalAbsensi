@@ -18,7 +18,7 @@ class LoginPresenter(context: Context) {
     fun onLogin(context: Context, username: String, password: String) {
 
         var requestBody: MutableMap<String, String> = mutableMapOf()
-        requestBody.put("username", username)
+        requestBody["username"] = username
         requestBody.put("password", password)
 
         API.create(context).login(requestBody)
@@ -30,12 +30,11 @@ class LoginPresenter(context: Context) {
 
                     override fun onResponse(call: Call<MUserLogin>, response: Response<MUserLogin>) {
                         Log.d("LOGINDATA", response.body().toString())
+                        iLogin.onLoading()
 
                         if (response.body()?.status == true) iLogin.onDataCompleteFromApi(response.body() as MUserLogin)
-                        else {
-                            iLogin.onLoading()
-                            (Toast.makeText(context, "Username atau Password tidak sesuai", Toast.LENGTH_SHORT).show())
-                        }
+                        else Toast.makeText(context, "Username atau Password tidak sesuai", Toast.LENGTH_SHORT).show()
+
                     }
                 })
 

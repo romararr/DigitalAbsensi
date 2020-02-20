@@ -1,17 +1,16 @@
 package romara.rr.pdsidigitalabsensi.base
 
-import android.app.AlertDialog
+import android.annotation.SuppressLint
 import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import romara.rr.pdsidigitalabsensi.R
 import romara.rr.pdsidigitalabsensi.base.services.ConnectionReceiver
 
+@SuppressLint("Registered")
+@Suppress("DEPRECATION")
 open class BaseActivity : AppCompatActivity(), ConnectionReceiver.ConnectReceiverListener {
     private var mSnackBar: Snackbar? = null
 
@@ -40,6 +39,7 @@ open class BaseActivity : AppCompatActivity(), ConnectionReceiver.ConnectReceive
     override fun onResume() {
         super.onResume()
         ConnectionReceiver.connectReceiverListener = this
+//        checkMacAddress()
     }
 
 }

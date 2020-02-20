@@ -14,16 +14,13 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
-import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.location.*
 import kotlinx.android.synthetic.main.new_home_layout.*
-import kotlinx.android.synthetic.main.out_office_note.*
 import kotlinx.android.synthetic.main.out_office_note.view.*
 import org.jetbrains.anko.longToast
 import org.jetbrains.anko.sdk27.coroutines.onClick
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
-import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalTime
 import org.threeten.bp.format.DateTimeFormatter
 import romara.rr.pdsidigitalabsensi.R
@@ -37,18 +34,19 @@ import romara.rr.pdsidigitalabsensi.presenter.HomePresenter
 import java.text.SimpleDateFormat
 
 
+@SuppressLint("SimpleDateFormat")
 class HomeActivity : BaseActivity(), iHome {
 
     private val presenter by lazy { HomePresenter(this) }
-    lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-    val PERMISSION_ID = 42
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+    private val permissionID = 42
 
-    var come = spGetTimeCome()
-    var out = spGetTimeOut()
-    var breakTime = spGetBreak()
-    var endbreakTime = spGetEndBreak()
-    var today = spGetToday()
-    var recentLocation: String? = ""
+    private var come = spGetTimeCome()
+    private var out = spGetTimeOut()
+    private var breakTime = spGetBreak()
+    private var endbreakTime = spGetEndBreak()
+    private var today = spGetToday()
+    private var recentLocation: String? = ""
 
     companion object {
         var instance: HomeActivity? = null
@@ -70,19 +68,29 @@ class HomeActivity : BaseActivity(), iHome {
 
         // Get Location
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
-        liveLocation()
+//        liveLocation()
+        getLastLocation()
         liveTime()
 
         presenter.getTimeOnLogin(this)
+        initActions()
+    }
 
-        // Actions
+    private fun initActions() {
         masuk_button.onClick { absenCome() }
         pulang_button.onClick { absenReturn() }
         istirahat_button.onClick { absenBreak() }
         end_istirahat_button.onClick { absenEndBreak() }
         verify_button.onClick { startActivity<ApprovalActivity>() }
         menu_button.onClick { v -> showPopup(v!!) }
-        location_view.onClick { openMap(spGetLocation("latitude").toDouble(), spGetLocation("longitude").toDouble()) }
+        refresh_button.onClick { reloadLocation() }
+        location_text.onClick {
+            if (recentLocation.toString().isEmpty()) longToast("Map belum didapat")
+            else openMap(
+                spGetLocation("latitude").toDouble(),
+                spGetLocation("longitude").toDouble()
+            )
+        }
     }
 
     // Live Data
@@ -96,7 +104,7 @@ class HomeActivity : BaseActivity(), iHome {
                             val date = System.currentTimeMillis()
                             val sdf = SimpleDateFormat("HH:mm")
                             val dateStr = sdf.format(date)
-                            time_view.setText(dateStr)
+                            time_view.text = dateStr
                         }
                     }
                 } catch (e: InterruptedException) {
@@ -107,23 +115,23 @@ class HomeActivity : BaseActivity(), iHome {
         t.start()
     }
 
-    private fun liveLocation() {
-        val locThread: Thread = object : Thread() {
-            override fun run() {
-                try {
-                    while (!isInterrupted) {
-                        sleep(3000)
-                        runOnUiThread {
-                            getLastLocation()
-                        }
-                    }
-                } catch (e: InterruptedException) {
-                    e.printStackTrace()
-                }
-            }
-        }
-        locThread.start()
-    }
+//    private fun liveLocation() {
+//        val locThread: Thread = object : Thread() {
+//            override fun run() {
+//                try {
+//                    while (!isInterrupted) {
+//                        sleep(500)
+//                        runOnUiThread {
+//                            getLastLocation()
+//                        }
+//                    }
+//                } catch (e: InterruptedException) {
+//                    e.printStackTrace()
+//                }
+//            }
+//        }
+//        locThread.start()
+//    }
 
     override fun onDataCompleteFromApi(q: MLocation, type: String, resCondition: String) {
 
@@ -134,7 +142,7 @@ class HomeActivity : BaseActivity(), iHome {
             return onLogout(this)
         } // Token Expired
 
-        if (q.status == false) {
+        if (!q.status) {
             when (q.condition) {
                 ConstVar.SUDAHABSEN -> toast("Anda Sudah Absen")
                 ConstVar.ATTENDYET -> toast("Anda Belum Absen Masuk")
@@ -154,8 +162,7 @@ class HomeActivity : BaseActivity(), iHome {
                 if (ConstVar.FAR_FROMOFFICE in q.message) {
                     longToast(ConstVar.MSG_FAROFFICE)
                     endLoading()
-                }
-                else absenCome(true)
+                } else absenCome(true)
 
             } // Absen Datang
             ConstVar.RETURN -> {
@@ -172,8 +179,7 @@ class HomeActivity : BaseActivity(), iHome {
                 if (ConstVar.FAR_FROMOFFICE in q.message) {
                     longToast(ConstVar.MSG_FAROFFICE)
                     endLoading()
-                }
-                else absenReturn(true)
+                } else absenReturn(true)
 
             } // Absen Pulang
             ConstVar.BREAK -> {
@@ -185,8 +191,7 @@ class HomeActivity : BaseActivity(), iHome {
                 if (ConstVar.FAR_FROMOFFICE in q.message) {
                     longToast(ConstVar.MSG_FAROFFICE)
                     endLoading()
-                }
-                else absenBreak(true)
+                } else absenBreak(true)
 
             } // Absen Istirahat
             ConstVar.ENDBREAK -> {
@@ -199,8 +204,7 @@ class HomeActivity : BaseActivity(), iHome {
                 if (ConstVar.FAR_FROMOFFICE in q.message) {
                     longToast(ConstVar.MSG_FAROFFICE)
                     endLoading()
-                }
-                else absenEndBreak(true)
+                } else absenEndBreak(true)
 
             } // Absen Selesai Istirahat
             else -> endLoading()
@@ -208,29 +212,41 @@ class HomeActivity : BaseActivity(), iHome {
     }
 
     override fun onGetAbsenCompleteApi(q: MUser) {
+        if (!q.status) onExpired(this)
         val data = q.data[0]
 //        date + "T" + data.time_come.split(".")[0]
 
         profile_name.text = data.fullname
 
-        if (data.time_come.isNullOrBlank() == false) {
+        if (!data.time_come.isNullOrBlank()) {
             spSetTimeCome(data.time_come)
             come = spGetTimeCome()
+        } else {
+            spClearTime()
+            spSetToday()
         }
-        if (data.time_return.isNullOrBlank() == false) {
+
+
+        if (!data.time_return.isNullOrBlank()) {
             spSetTimeOut(data.time_return)
             out = spGetTimeOut()
         }
-        if (data.time_break.isNullOrBlank() == false) {
+        if (!data.time_break.isNullOrBlank()) {
             spSetBreak(data.time_break)
             breakTime = spGetBreak()
         }
-        if (data.time_endbreak.isNullOrBlank() == false) {
+        if (!data.time_endbreak.isNullOrBlank()) {
             spSetEndBreak(data.time_endbreak)
             endbreakTime = spGetEndBreak()
         }
 
         getFirstView(today)
+    }
+
+    override fun onDataErrorFromApi(throwable: Throwable) {
+        endLoading()
+        toast("Network Error")
+        Log.d("ERR API", throwable.toString())
     }
 
     private fun endLoading() {
@@ -246,66 +262,74 @@ class HomeActivity : BaseActivity(), iHome {
     private fun absenCome(res: Boolean? = false) {
         if (res == true) {
             spSetTimeCome()
-            time_masuk.setText(DateTimeFormatter.ofPattern("HH:mm").format(LocalTime.now()))
+            time_masuk.text = DateTimeFormatter.ofPattern("HH:mm").format(LocalTime.now())
+
+            showSuccessDialog()
+            presenter.getTimeOnLogin(this)
             return
         }
 
         startLoading()
         presenter.onAttend(applicationContext, ConstVar.COME, "datang")
-    }
+    } // Absen Datang
 
     private fun absenReturn(res: Boolean? = false) {
 
         if (res == true) {
             spSetTimeOut()
-            time_pulang.setText(DateTimeFormatter.ofPattern("HH:mm").format(LocalTime.now()))
+            time_pulang.text = DateTimeFormatter.ofPattern("HH:mm").format(LocalTime.now())
+
+            showSuccessDialog()
             return
         }
 
         startLoading()
         presenter.onAttend(applicationContext, ConstVar.RETURN, "pulang")
-    }
+    } // Absen Pulang
 
     private fun absenBreak(res: Boolean? = false) {
 
         if (res == true) {
             spSetBreak()
-            time_break.setText(DateTimeFormatter.ofPattern("HH:mm").format(LocalTime.now()))
+            time_break.text = DateTimeFormatter.ofPattern("HH:mm").format(LocalTime.now())
+
+            showSuccessDialog()
             return
         }
 
         startLoading()
         presenter.onAttend(applicationContext, ConstVar.BREAK, "istirahat")
-    }
+    } // Absen Istirahat
 
     private fun absenEndBreak(res: Boolean? = false) {
 
         if (res == true) {
             spSetEndBreak()
-            time_endbreak.setText(DateTimeFormatter.ofPattern("HH:mm").format(LocalTime.now()))
+            time_endbreak.text = DateTimeFormatter.ofPattern("HH:mm").format(LocalTime.now())
+
+            showSuccessDialog()
             return
         }
 
         startLoading()
         presenter.onAttend(applicationContext, ConstVar.ENDBREAK, "selesai istirahat")
+    } // Absen Selesai Istirahat
 
-//        break_button.setBackgroundResource(R.drawable.rounded_button_disabled)
+    private fun resetToday(){
+        time_masuk.text = "--:--"
+        time_pulang.text = "--:--"
+        time_break.text = "--:--"
+        time_endbreak.text = "--:--"
+        spClearTime()
+        getFirstView()
     }
 
-    override fun onDataErrorFromApi(throwable: Throwable) {
-        endLoading()
-//        showErrorDialog()
-        toast("Network Error")
-        Log.d("ERR API", throwable.toString())
-    }
-
-    fun getFirstView(today: Boolean = true) {
+    private fun getFirstView(today: Boolean = true) {
 
 //        if (spGetRole().equals(ConstVar.ADM)) verify_layout.visible()
-        if (today == false) {
+        if (!today) {
             Log.d("today", "kosong :(")
-            spClearTime()
-            getFirstView()
+            resetToday()
             return
         }
 
@@ -314,15 +338,15 @@ class HomeActivity : BaseActivity(), iHome {
         if (out.isNotEmpty()) time_pulang.text = presenter.parseTime(out)
         if (breakTime.isNotEmpty()) time_break.text = presenter.parseTime(breakTime)
         if (endbreakTime.isNotEmpty()) time_endbreak.text = presenter.parseTime(endbreakTime)
-    }
+    } // Render First Load View
 
     // Location
     override fun onRequestPermissionsResult(
-            requestCode: Int,
-            permissions: Array<out String>,
-            grantResults: IntArray
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
     ) {
-        if (requestCode == PERMISSION_ID) {
+        if (requestCode == permissionID) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 toast("Granted Location")
             }
@@ -335,13 +359,13 @@ class HomeActivity : BaseActivity(), iHome {
         if (checkPermission()) {
             if (isLocationEnabled()) {
                 fusedLocationProviderClient.lastLocation.addOnCompleteListener(this) { task ->
-                    var location: Location? = task.result
+                    val location: Location? = task.result
                     if (location == null) {
                         requestNewLocation()
                     } else {
                         recentLocation =
-                                getCompleteAdress(this, location.latitude, location.longitude)
-                        location_text.setText(recentLocation)
+                            getCompleteAdress(this, location.latitude, location.longitude)
+                        location_text.text = recentLocation
 
                         spSetLocation(location.latitude, location.longitude)
                     }
@@ -357,27 +381,34 @@ class HomeActivity : BaseActivity(), iHome {
     }
 
     private fun requestNewLocation() {
-        var locRequest = LocationRequest()
+        val locRequest = LocationRequest()
         locRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         locRequest.interval = 20000
-        locRequest.fastestInterval = 5000
+        locRequest.fastestInterval = 3000
         locRequest.numUpdates = 1
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
         fusedLocationProviderClient.requestLocationUpdates(
-                locRequest,
-                locationCallback,
-                Looper.myLooper()
+            locRequest,
+            locationCallback,
+            Looper.myLooper()
         )
     }
 
+    private fun reloadLocation() {
+//        toast("Location Refreshed")
+        recentLocation = "refreshing..."
+        location_text.text = recentLocation
+        requestNewLocation()
+    } // Reload Location
+
     private val locationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
-            var lastLocation: Location = locationResult.lastLocation
+            val lastLocation: Location = locationResult.lastLocation
 
             recentLocation =
-                    getCompleteAdress(this@HomeActivity, lastLocation.latitude, lastLocation.longitude)
-            location_text.setText(recentLocation)
+                getCompleteAdress(this@HomeActivity, lastLocation.latitude, lastLocation.longitude)
+            location_text.text = recentLocation
 
             spSetLocation(lastLocation.latitude, lastLocation.longitude)
         }
@@ -386,21 +417,21 @@ class HomeActivity : BaseActivity(), iHome {
     fun showNoteDialog(condition: String) {
         val viewGroup = findViewById<ViewGroup>(android.R.id.content)
         val dialogView: View =
-                LayoutInflater.from(this).inflate(R.layout.out_office_note, viewGroup, false)
+            LayoutInflater.from(this).inflate(R.layout.out_office_note, viewGroup, false)
         val builder: AlertDialog.Builder = AlertDialog.Builder(this)
         builder.setView(dialogView)
 
         val alertDialog: AlertDialog = builder.create()
 
         dialogView.manualcome_button.setOnClickListener {
-            if (dialogView.note_text.equals("")) {
+            if (dialogView.note_text.toString().isEmpty()) {
                 toast("Note harus diisi")
             } else {
                 startLoading()
                 presenter.onAttendOutOffice(
-                        this,
-                        condition,
-                        dialogView.note_text.text.toString()
+                    this,
+                    condition,
+                    dialogView.note_text.text.toString()
                 )
                 alertDialog.dismiss()
             }
@@ -409,19 +440,21 @@ class HomeActivity : BaseActivity(), iHome {
         alertDialog.show()
     } // Note Out Office Attend
 
-    fun showErrorDialog() {
+    private fun showSuccessDialog() {
         val viewGroup = findViewById<ViewGroup>(android.R.id.content)
         val dialogView: View =
-                LayoutInflater.from(this).inflate(R.layout.net_error_layout, viewGroup, false)
+            LayoutInflater.from(this).inflate(R.layout.absen_status_layout, viewGroup, false)
         val builder: AlertDialog.Builder = AlertDialog.Builder(this)
         builder.setView(dialogView)
 
         val alertDialog: AlertDialog = builder.create()
+        alertDialog.window!!.setBackgroundDrawableResource(R.drawable.bg_rounded_white)
+        alertDialog.window!!.setLayout(300, 300)
         alertDialog.show()
-    }
+    } // Show Complete Absen
 
-    fun showPopup(view: View) {
-        var popup: PopupMenu? = null
+    private fun showPopup(view: View) {
+        val popup: PopupMenu?
         popup = PopupMenu(this, view)
         popup.inflate(R.menu.profile_menu)
 
@@ -445,4 +478,9 @@ class HomeActivity : BaseActivity(), iHome {
         popup.show()
 
     } // User Menu Popup
+
+    override fun onStart() {
+        super.onStart()
+        today = spGetToday()
+    }
 }

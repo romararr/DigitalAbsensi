@@ -34,11 +34,11 @@ class HomePresenter(context: Context) {
     ): MutableMap<String, String> {
 
         var requestBody: MutableMap<String, String> = mutableMapOf()
-        requestBody.put("username", context.spGetUser())
-        requestBody.put("condition", condition)
-        requestBody.put("note", note)
-        requestBody.put("latitude", context.spGetLocation("latitude"))
-        requestBody.put("longitude", context.spGetLocation("longitude"))
+        requestBody["username"] = context.spGetUser()
+        requestBody["condition"] = condition
+        requestBody["note"] = note
+        requestBody["latitude"] = context.spGetLocation("latitude")
+        requestBody["longitude"] = context.spGetLocation("longitude")
 
         return requestBody
     }

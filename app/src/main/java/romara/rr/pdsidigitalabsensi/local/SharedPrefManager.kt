@@ -151,7 +151,7 @@ class SharedPrefManager private constructor(private val context: Context) {
     }
 
     fun getToday(): Boolean {
-        return pref(SP_DATENOW).getInt("datenow", 0).equals(LocalDate.now().dayOfMonth)
+        return pref(SP_DATENOW).getInt("datenow", 0) == LocalDate.now().dayOfMonth
     }
 
     fun reset(key: Array<String>) {
@@ -167,7 +167,7 @@ class SharedPrefManager private constructor(private val context: Context) {
 
     fun clear(): Boolean {
         return try {
-            reset(arrayOf(SP_TOKEN, SP_USER, SP_NIP, SP_ROLE, SP_POSID))
+            reset(arrayOf(SP_TOKEN, SP_USER, SP_NIP, SP_ROLE, SP_POSID, SP_LOC))
             true
         } catch (e: Exception) {
             false
