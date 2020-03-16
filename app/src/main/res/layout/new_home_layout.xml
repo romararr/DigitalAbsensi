@@ -28,18 +28,27 @@
 
                 <!-- PROFILE -->
                 <LinearLayout
+                    android:id="@+id/profile_view"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2">
 
-                    <ImageView
-                        android:id="@+id/profile_pic"
+                    <com.airbnb.lottie.LottieAnimationView
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:layout_marginRight="10dp"
-                        android:background="@drawable/rounded_button_disabled"
-                        android:padding="3dp"
-                        android:src="@drawable/default_profile" />
+                        android:layout_gravity="center"
+                        app:lottie_autoPlay="true"
+                        app:lottie_fileName="clock.json"
+                        app:lottie_loop="true" />
+
+                    <!--                    <ImageView-->
+                    <!--                        android:id="@+id/profile_pic"-->
+                    <!--                        android:layout_width="50dp"-->
+                    <!--                        android:layout_height="50dp"-->
+                    <!--                        android:layout_marginRight="10dp"-->
+                    <!--                        android:background="@drawable/rounded_button_disabled"-->
+                    <!--                        android:padding="3dp"-->
+                    <!--                        android:src="@drawable/default_profile" />-->
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -73,9 +82,9 @@
 
                         <ImageView
                             android:id="@+id/menu_button"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:layout_marginTop="8dp"
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:layout_marginTop="12dp"
                             android:src="@drawable/arrow_down" />
                     </LinearLayout>
 
@@ -125,8 +134,8 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
                             android:layout_alignParentStart="true"
+                            android:layout_centerInParent="true"
                             android:text="Lokasi Saat Ini"
                             android:textColor="@color/white"
                             android:textSize="16sp"
@@ -136,15 +145,15 @@
                             android:id="@+id/refresh_button"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="4dp"
                             android:layout_alignParentEnd="true"
+                            android:layout_marginBottom="4dp"
+                            android:background="@drawable/rounded_corner_border_white"
                             android:paddingHorizontal="18dp"
                             android:paddingVertical="5dp"
                             android:text="Refresh"
                             android:textColor="#fff"
                             android:textSize="16sp"
-                            android:background="@drawable/rounded_corner_border_white"
-                            android:textStyle="bold"/>
+                            android:textStyle="bold" />
 
                     </RelativeLayout>
 
@@ -317,7 +326,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="Break"
+                        android:text="History"
                         android:textSize="20sp"
                         android:textStyle="bold" />
 
@@ -325,76 +334,24 @@
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:layout_gravity="center"
-                        android:layout_margin="10dp"
+                        android:layout_margin="20dp"
                         android:src="@drawable/breaks" />
 
-                    <TextView
-                        android:id="@+id/time_break"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="--:--"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
+<!--                    <TextView-->
+<!--                        android:id="@+id/time_break"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:gravity="center"-->
+<!--                        android:text="&#45;&#45;:&#45;&#45;"-->
+<!--                        android:textSize="20sp"-->
+<!--                        android:textStyle="bold" />-->
 
                 </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/end_istirahat_button"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_rounded_white"
-                    android:elevation="2dp"
-                    android:orientation="vertical"
-                    android:padding="10dp">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="End Break"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
-
-                    <ImageView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_gravity="center"
-                        android:layout_margin="10dp"
-                        android:src="@drawable/breakend" />
-
-                    <TextView
-                        android:id="@+id/time_endbreak"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="--:--"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-            <!-- Absen Break End-->
-
-            <!-- Verify Attend-->
-            <LinearLayout
-                android:id="@+id/verify_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="0.5" />
 
                 <LinearLayout
                     android:id="@+id/verify_button"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_margin="10dp"
                     android:layout_weight="1"
                     android:background="@drawable/bg_rounded_white"
@@ -416,46 +373,12 @@
                         android:layout_gravity="center"
                         android:layout_margin="10dp"
                         app:lottie_autoPlay="true"
-                        app:lottie_fileName="verify.json" />
+                        app:lottie_fileName="verify.json"/>
 
                 </LinearLayout>
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="0.5" />
-
                 <!--                <LinearLayout-->
-                <!--                    android:id="@+id/historymap_button"-->
-                <!--                    android:layout_width="0dp"-->
-                <!--                    android:layout_height="wrap_content"-->
-                <!--                    android:layout_margin="10dp"-->
-                <!--                    android:layout_marginRight="20dp"-->
-                <!--                    android:layout_weight="1"-->
-                <!--                    android:background="@drawable/bg_rounded_white"-->
-                <!--                    android:elevation="2dp"-->
-                <!--                    android:orientation="vertical"-->
-                <!--                    android:padding="10dp">-->
-
-                <!--                    <TextView-->
-                <!--                        android:layout_width="match_parent"-->
-                <!--                        android:layout_height="wrap_content"-->
-                <!--                        android:gravity="center"-->
-                <!--                        android:text="History Map"-->
-                <!--                        android:textSize="20sp"-->
-                <!--                        android:textStyle="bold" />-->
-
-                <!--                    <ImageView-->
-                <!--                        android:layout_width="50dp"-->
-                <!--                        android:layout_height="50dp"-->
-                <!--                        android:layout_gravity="center"-->
-                <!--                        android:layout_margin="10dp"-->
-                <!--                        android:src="@drawable/map_pin" />-->
-
-                <!--                </LinearLayout>-->
-
-                <!--                <LinearLayout-->
-                <!--                    android:id="@+id/historyabsen_button"-->
+                <!--                    android:id="@+id/end_istirahat_button"-->
                 <!--                    android:layout_width="0dp"-->
                 <!--                    android:layout_height="wrap_content"-->
                 <!--                    android:layout_margin="10dp"-->
@@ -469,7 +392,7 @@
                 <!--                        android:layout_width="match_parent"-->
                 <!--                        android:layout_height="wrap_content"-->
                 <!--                        android:gravity="center"-->
-                <!--                        android:text="History Absen"-->
+                <!--                        android:text="End Break"-->
                 <!--                        android:textSize="20sp"-->
                 <!--                        android:textStyle="bold" />-->
 
@@ -478,11 +401,69 @@
                 <!--                        android:layout_height="50dp"-->
                 <!--                        android:layout_gravity="center"-->
                 <!--                        android:layout_margin="10dp"-->
-                <!--                        android:src="@drawable/file_text" />-->
+                <!--                        android:src="@drawable/breakend" />-->
+
+                <!--                    <TextView-->
+                <!--                        android:id="@+id/time_endbreak"-->
+                <!--                        android:layout_width="match_parent"-->
+                <!--                        android:layout_height="wrap_content"-->
+                <!--                        android:gravity="center"-->
+                <!--                        android:text="&#45;&#45;:&#45;&#45;"-->
+                <!--                        android:textSize="20sp"-->
+                <!--                        android:textStyle="bold" />-->
 
                 <!--                </LinearLayout>-->
 
             </LinearLayout>
+            <!-- Absen Break End-->
+
+            <!-- Verify Attend-->
+            <!--            <LinearLayout-->
+            <!--                android:id="@+id/verify_layout"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:orientation="horizontal">-->
+
+            <!--                <View-->
+            <!--                    android:layout_width="0dp"-->
+            <!--                    android:layout_height="0dp"-->
+            <!--                    android:layout_weight="0.5" />-->
+
+            <!--                <LinearLayout-->
+            <!--                    android:id="@+id/verify_button"-->
+            <!--                    android:layout_width="0dp"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:layout_margin="10dp"-->
+            <!--                    android:layout_weight="1"-->
+            <!--                    android:background="@drawable/bg_rounded_white"-->
+            <!--                    android:elevation="2dp"-->
+            <!--                    android:orientation="vertical"-->
+            <!--                    android:padding="10dp">-->
+
+            <!--                    <TextView-->
+            <!--                        android:layout_width="match_parent"-->
+            <!--                        android:layout_height="wrap_content"-->
+            <!--                        android:gravity="center"-->
+            <!--                        android:text="Verify Attend"-->
+            <!--                        android:textSize="20sp"-->
+            <!--                        android:textStyle="bold" />-->
+
+            <!--                    <com.airbnb.lottie.LottieAnimationView-->
+            <!--                        android:layout_width="70dp"-->
+            <!--                        android:layout_height="70dp"-->
+            <!--                        android:layout_gravity="center"-->
+            <!--                        android:layout_margin="10dp"-->
+            <!--                        app:lottie_autoPlay="true"-->
+            <!--                        app:lottie_fileName="verify.json" />-->
+
+            <!--                </LinearLayout>-->
+
+            <!--                <View-->
+            <!--                    android:layout_width="0dp"-->
+            <!--                    android:layout_height="0dp"-->
+            <!--                    android:layout_weight="0.5" />-->
+
+            <!--            </LinearLayout>-->
             <!-- Verify End-->
 
         </LinearLayout>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="romara.rr.pdsidigitalabsensi">
+    package="com.pdsi.digital.attendance">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -26,11 +26,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.HomeActivity">
+        <activity android:name="com.pdsi.digital.attendance.view.HomeActivity">
 
         </activity>
-        <activity android:name=".view.AbsensiActivity"></activity>
         <activity android:name=".view.LogsActivity"></activity>
+        <activity android:name=".view.AbsensiActivity"></activity>
         <activity android:name=".view.ApprovalActivity"></activity>
 
         <!-- For android OS version below N -->
